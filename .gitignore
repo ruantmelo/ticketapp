@@ -1,0 +1,23 @@
+node_modules
+dist
+.turbo
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+
+# Backend local data
+apps/api/data
+
+# Editor
+.vscode
+.idea
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Deepwork session notes
+.slim/deepwork/

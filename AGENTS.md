@@ -60,11 +60,18 @@ Read these before making changes. They define the language, architecture, and de
 
 ## Verification Commands
 
-No code or tooling exists yet. Once scaffolding lands, record the actual commands here:
-- **Contracts:** `npx hardhat compile`, `npx hardhat test`
-- **Frontend / Backend / Scanner app:** *to be filled* when package scripts are defined (expected `lint`, `typecheck`, `test`)
+The project uses a **pnpm workspaces monorepo** (`apps/api`, `apps/web`, `packages/shared`).
 
-Until then, prefer Hardhat tests for contract changes and the project's package manager scripts once they exist.
+- **Typecheck (all workspaces):** `pnpm -r typecheck`
+- **Build (all workspaces):** `pnpm -r build`
+- **Dev (API + Web in parallel):** `pnpm dev` (API on :4000, Web on :5173 with `/api` proxy)
+- **Backend DB (SQLite + Drizzle):** `pnpm db:push` (push schema), `pnpm db:generate` (generate migrations)
+- **Contracts:** `npx hardhat compile`, `npx hardhat test` (once contract workspace is added)
+
+### Running the stack locally
+1. Copy `apps/api/.env.example` → `apps/api/.env`
+2. `pnpm install` then `pnpm db:push` (creates `apps/api/data/ticket-chain.db`)
+3. `pnpm dev` — the Vite dev server proxies `/api/*` → `localhost:4000` and `/uploads/*` → `localhost:4000` (same-origin for httpOnly cookies)
 
 ## Workflow
 

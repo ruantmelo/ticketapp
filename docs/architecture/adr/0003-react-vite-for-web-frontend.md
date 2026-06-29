@@ -39,6 +39,6 @@ We choose **React + Vite** as a single-page application.
 ## Consequences
 
 - The web frontend is a React SPA built with Vite.
-- Client-side routing (e.g., React Router or TanStack Router) is used.
+- Client-side routing uses **TanStack Router** (file-based, type-safe routes via `@tanstack/router-plugin/vite` with `autoCodeSplitting`).
 - No server-side rendering; initial load is a client-side hydration of the app shell.
 - The frontend communicates with the backend (ADR 0005) via REST/WebSocket APIs and with the blockchain via wagmi + viem (ADR 0004).

@@ -25,7 +25,7 @@ This is the single source of truth for feature development status. Update the **
 
 | ID | Feature | Priority | Milestone | Status | Spec |
 |----|---------|----------|-----------|--------|------|
-| F-ORG-01 | Event Creation Panel | High | M2 | Not Started | [spec](features/organizer/F-ORG-01-event-creation-panel.md) |
+| F-ORG-01 | Event Creation Panel | High | M2 | In Progress | [spec](features/organizer/F-ORG-01-event-creation-panel.md) |
 | F-ORG-02 | Minting Engine | High | M1, M2 | Not Started | [spec](features/organizer/F-ORG-02-minting-engine.md) |
 | F-ORG-03 | Secondary Market Configuration | High | M1, M2 | Not Started | [spec](features/organizer/F-ORG-03-secondary-market-config.md) |
 | F-ORG-04 | Analytics Dashboard | Medium | M5 | Not Started | [spec](features/organizer/F-ORG-04-analytics-dashboard.md) |

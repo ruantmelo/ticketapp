@@ -1,0 +1,21 @@
+{
+  "name": "ticket-chain",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Blockchain-based event ticketing platform that eliminates ticket fraud (cambismo).",
+  "packageManager": "pnpm@10.15.1",
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "typecheck": "pnpm -r run typecheck",
+    "db:push": "pnpm --filter @ticket-chain/api db:push",
+    "db:migrate": "pnpm --filter @ticket-chain/api db:migrate",
+    "db:seed": "pnpm --filter @ticket-chain/api db:seed"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3", "esbuild"]
+  }
+}

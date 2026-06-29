@@ -6,7 +6,7 @@
 | **Persona** | Organizer / Producer |
 | **Milestone** | M2 |
 | **Priority** | High |
-| **Status** | Not Started |
+| **Status** | In Progress |
 
 ## Summary
 
@@ -45,6 +45,12 @@ As an organizer, I want to create an event through a visual web panel with ticke
 - **F-ORG-02** (Minting Engine) — receives the configuration produced by this panel and executes the mint.
 - **F-ORG-03** (Secondary Market Configuration) — the resale price cap and royalty fields entered here are enforced on-chain by the contract configured in F-ORG-03.
 - **ADR 0008** (NFT standard) — must be resolved before the ticket-tier data model is finalized, as it affects whether tiers map to separate contracts or token IDs within one contract.
+
+## Implementation Notes (M2)
+
+- **Token standard:** The Pencil prototype's confirmation screen shows `Padrão de token: ERC-1155`, but ADR 0008 (Accepted) mandates **ERC-721**. The implementation follows the ADR and displays ERC-721.
+- **Per-tier vs per-event cap/royalty:** F-ORG-01 collects cap/royalty **per tier** (matching the design's tier table). ADR 0008 sets a **single immutable** `maxResalePriceMultiplier` and `royaltyPercentage` per event contract. The panel stores per-tier values off-chain and displays **weighted averages** ("Cap de revenda médio", "Royalty média") in Revisão/Confirmation. Reconciliation to a single on-chain value is handled by F-ORG-02 (Minting Engine) when deploying the contract.
+- **Minting Engine:** The backend's minting service is a **stub** during F-ORG-01 — it returns mock on-chain parameters (contract address, total supply, averages). Actual contract deployment is F-ORG-02's responsibility.
 
 ## Open Questions
 
