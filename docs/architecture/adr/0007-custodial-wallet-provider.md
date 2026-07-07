@@ -5,11 +5,11 @@
 | **Status** | Proposed |
 | **Date** | 2026-06-22 |
 | **Deciders** | Project team |
-| **Blocks** | M3 (F-BUY-01, F-BUY-02, F-BUY-03) |
+| **Blocks** | M3 (F-BUY-01, F-BUY-02, F-BUY-03); production organizer wallet integration for F-ORG-02 |
 
 ## Context
 
-The platform's Web2.5 approach (F-BUY-01) requires that buyers register with email/password and automatically receive a wallet whose private keys are managed by the platform. The user never sees a seed phrase. The chosen provider determines: key management security, transaction signing flow (local vs. server-side), account recovery, gas fee handling, and integration complexity with the Node.js backend.
+The platform's Web2.5 approach requires that buyers register with email/password and automatically receive a wallet whose private keys are managed by the platform. Organizers also need organizer custodial wallets so event ownership and primary sale distribution can happen without requiring organizers to use blockchain tooling. The user never sees a seed phrase. The chosen provider determines: key management security, transaction signing flow (local vs. server-side), account recovery, gas fee handling, and integration complexity with the Node.js backend.
 
 ## Considered Options
 

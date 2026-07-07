@@ -8,7 +8,7 @@
 
 ## Context
 
-The web frontend (React + Vite, per ADR 0003) needs to interact with the Ethereum blockchain: read contract state (ticket ownership, listings, burn status), submit transactions (purchases, listings, burns), and subscribe to events. We need a Web3 client library that integrates well with React and provides strong TypeScript support.
+The web frontend (React + Vite, per ADR 0003) needs to interact with Polygon: read contract state (ticket ownership, listings, burn status), submit transactions (purchases, listings, burns), and subscribe to events. We need a Web3 client library that integrates well with React and provides strong TypeScript support.
 
 ## Considered Options
 

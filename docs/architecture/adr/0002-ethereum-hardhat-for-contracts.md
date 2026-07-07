@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | Accepted |
+| **Status** | Superseded by [ADR 0011](0011-polygon-for-mvp-network.md) for target blockchain only |
 | **Date** | 2026-06-22 |
 | **Deciders** | Project team |
 
@@ -26,7 +26,7 @@ The platform's core value proposition — fraud-proof tickets, programmable roya
 
 ## Decision
 
-We choose **Ethereum L1 + Solidity + Hardhat** for the MVP.
+We chose **Ethereum L1 + Solidity + Hardhat** for the MVP. The target blockchain portion of this decision was later superseded by [ADR 0011](0011-polygon-for-mvp-network.md), which chooses Polygon PoS for the MVP. Solidity and Hardhat remain accepted.
 
 Development and testing use the **Hardhat local dev network**. The contracts are EVM-compatible, so migration to an L2 (e.g., Polygon) is a deployment decision, not a rewrite, if gas costs become prohibitive at scale.
 

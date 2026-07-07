@@ -19,5 +19,9 @@ apps/api/data
 npm-debug.log*
 pnpm-debug.log*
 
+# Hardhat
+packages/contracts/artifacts
+packages/contracts/cache
+
 # Deepwork session notes
 .slim/deepwork/

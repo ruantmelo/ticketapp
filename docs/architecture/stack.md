@@ -8,7 +8,7 @@ This document summarizes the chosen technology stack and links to the Architectu
 |-------|------------|-----|--------|
 | Smart contract language | Solidity | [0002](adr/0002-ethereum-hardhat-for-contracts.md) | Accepted |
 | Contract framework / dev network | Hardhat | [0002](adr/0002-ethereum-hardhat-for-contracts.md) | Accepted |
-| Target blockchain | Ethereum (L1) | [0002](adr/0002-ethereum-hardhat-for-contracts.md) | Accepted |
+| Target blockchain | Polygon PoS | [0011](adr/0011-polygon-for-mvp-network.md) | Accepted |
 | Web frontend framework | React + Vite | [0003](adr/0003-react-vite-for-web-frontend.md) | Accepted |
 | Web3 client library | wagmi + viem | [0004](adr/0004-wagmi-viem-for-web3-client.md) | Accepted |
 | Backend runtime / framework | Node.js (Fastify / NestJS) | [0005](adr/0005-nodejs-backend-for-off-chain-services.md) | Accepted |
@@ -20,8 +20,8 @@ This document summarizes the chosen technology stack and links to the Architectu
 
 ## Rationale Summary
 
-### Smart Contracts: Solidity + Hardhat on Ethereum
-Solidity is the dominant smart contract language with the largest ecosystem, tooling, and audit support. Ethereum L1 provides the highest security guarantees. Hardhat offers a mature local dev network, compilation, testing, and deployment pipeline. The EVM compatibility leaves the door open for future L2/sidechain migration if gas costs become prohibitive.
+### Smart Contracts: Solidity + Hardhat on Polygon
+Solidity is the dominant smart contract language with the largest ecosystem, tooling, and audit support. Hardhat offers a mature local dev network, compilation, testing, and deployment pipeline. Polygon PoS keeps EVM compatibility while lowering transaction costs for minting, secondary-market escrow, and burn-on-validation.
 
 ### Web Frontend: React + Vite
 React has the largest component ecosystem and developer pool. Vite provides fast HMR and a lightweight build without SSR complexity — appropriate for a client-side Web3 app where blockchain state is the source of truth, not server-rendered HTML.

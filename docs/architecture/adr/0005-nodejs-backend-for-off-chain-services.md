@@ -8,7 +8,7 @@
 
 ## Context
 
-The platform requires an off-chain backend to handle: user authentication (email/password), custodial wallet management, minting orchestration, FIAT payment integration (Pix + card), on-chain event indexing, and metadata storage. The backend must interact with the Ethereum blockchain (listen to events, submit transactions via the custodial wallet) and serve data to the web frontend and scanner app.
+The platform requires an off-chain backend to handle: user authentication (email/password), custodial wallet management, minting orchestration, FIAT payment integration (Pix + card), on-chain event indexing, and metadata storage. The backend must interact with Polygon (listen to events, submit transactions via the custodial wallet) and serve data to the web frontend and scanner app.
 
 ## Considered Options
 

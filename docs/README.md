@@ -12,7 +12,7 @@ Traditional ticketing suffers from:
 
 ## Solution
 
-Each ticket is minted as a non-fungible token (NFT) on the Ethereum blockchain. Smart contracts enforce:
+Each ticket is minted as a non-fungible token (NFT) on Polygon. Smart contracts enforce:
 - **Authenticity by mathematics** — ownership is verified on-chain, not by a printed barcode.
 - **Price caps on resale** — secondary market listings cannot exceed a configurable ceiling.
 - **Programmatic royalties** — a percentage of every resale returns to the organizer.
@@ -45,7 +45,7 @@ A Web2.5 layer (custodial wallets, FIAT payments) hides blockchain complexity fr
 
 | Layer | Technology |
 |-------|------------|
-| Smart contracts | Solidity, Hardhat (Ethereum) |
+| Smart contracts | Solidity, Hardhat (Polygon PoS) |
 | Web frontend | React + Vite |
 | Web3 client | wagmi + viem |
 | Backend | Node.js (Fastify / NestJS) |

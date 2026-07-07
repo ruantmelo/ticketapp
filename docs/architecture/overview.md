@@ -30,7 +30,7 @@ This document describes the high-level system architecture, dividing the platfor
 │                         ON-CHAIN LAYER                          │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────────┐│
-│  │              Ethereum Blockchain (Hardhat dev)              ││
+│  │              Polygon PoS (Hardhat local dev)                ││
 │  │                                                             ││
 │  │  ┌─────────────────┐  ┌──────────────────────────────────┐  ││
 │  │  │  Ticket NFT     │  │  Marketplace / Transfer          │  ││
@@ -50,7 +50,7 @@ This document describes the high-level system architecture, dividing the platfor
 
 ## On-Chain Layer
 
-The on-chain layer consists of Solidity smart contracts deployed on Ethereum (developed and tested using Hardhat). This layer is the **source of truth** for:
+The on-chain layer consists of Solidity smart contracts deployed on Polygon PoS (developed and tested using Hardhat). This layer is the **source of truth** for:
 
 - **Ticket existence** — which tickets have been minted and for which event.
 - **Ownership** — who currently holds each ticket NFT.
@@ -137,5 +137,5 @@ The central off-chain service. Responsibilities:
 |---------|----------|
 | **Gas fees** | To be decided (platform-subsidized, baked into ticket price, or gasless relayer). Intersects with ADR 0007 and F-BUY-03. |
 | **Security** | Smart contracts audited before mainnet deployment. Custodial wallet keys managed by the provider (ADR 0007). Backend follows standard web security practices (input validation, rate limiting, secrets management). |
-| **Scalability** | Ethereum L1 gas costs may be prohibitive for large events. L2/sidechain migration is a future consideration (post-MVP). The architecture is EVM-compatible to allow this. |
+| **Scalability** | Polygon PoS lowers transaction costs for real event usage while preserving EVM compatibility. Ethereum L1 or other EVM networks remain possible future deployment targets. |
 | **Privacy (LGPD)** | Buyer demographic data is stored off-chain only. On-chain data is limited to wallet addresses and token ownership. PII handling per LGPD requirements (see F-ORG-04 open questions). |
