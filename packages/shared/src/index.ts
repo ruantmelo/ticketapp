@@ -4,10 +4,10 @@ export const VALIDATION = {
   artworkMaxBytes: 5 * 1024 * 1024,
   artworkMimeTypes: ["image/png", "image/jpeg"] as const,
   resaleCapPctMin: 100,
-  resaleCapPctMax: 200,
+  resaleCapPctMax: 150,
   royaltyPctMin: 0,
-  royaltyPctMax: 25,
-  faceValueMin: 0,
+  royaltyPctMax: 10,
+  faceValueMin: 1,
   quantityMin: 1,
   maxTiers: 10,
 } as const;
@@ -38,17 +38,49 @@ export const ticketTierSchema = z.object({
     .max(1_000_000),
   faceValue: z
     .number({ message: "Preço inválido" })
-    .min(VALIDATION.faceValueMin, "Preço deve ser positivo"),
+    .int("Preço deve ser inteiro")
+    .min(VALIDATION.faceValueMin, "Preço deve ser maior que zero"),
   resaleCapPct: z
     .number({ message: "Cap inválido" })
     .int()
     .min(VALIDATION.resaleCapPctMin, "Cap mínimo é 100%")
-    .max(VALIDATION.resaleCapPctMax, "Cap máximo é 200%"),
+    .max(VALIDATION.resaleCapPctMax, "Cap máximo é 150%"),
   royaltyPct: z
     .number({ message: "Royalty inválido" })
+    .int("Royalty deve ser inteiro")
     .min(VALIDATION.royaltyPctMin, "Royalty mínimo é 0%")
-    .max(VALIDATION.royaltyPctMax, "Royalty máximo é 25%"),
+    .max(VALIDATION.royaltyPctMax, "Royalty máximo é 10%"),
 });
+
+const ticketTiersInputSchema = z
+  .array(ticketTierSchema)
+  .min(1, "Adicione ao menos um tier")
+  .max(VALIDATION.maxTiers, `Máximo de ${VALIDATION.maxTiers} tiers`)
+  .superRefine((tiers, ctx) => {
+    const first = tiers[0];
+    if (!first) return;
+
+    for (let index = 1; index < tiers.length; index++) {
+      const tier = tiers[index];
+      if (!tier) continue;
+
+      if (tier.resaleCapPct !== first.resaleCapPct) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [index, "resaleCapPct"],
+          message: "Todos os tiers devem usar o mesmo cap de revenda",
+        });
+      }
+
+      if (tier.royaltyPct !== first.royaltyPct) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [index, "royaltyPct"],
+          message: "Todos os tiers devem usar o mesmo royalty",
+        });
+      }
+    }
+  });
 
 export const eventInputSchema = z.object({
   title: z.string().min(1, "Título obrigatório").max(200),
@@ -65,10 +97,7 @@ export const eventInputSchema = z.object({
     .min(1, "Capacidade mínima é 1")
     .max(1_000_000),
   artworkUrl: z.string().nullable().default(null),
-  tiers: z
-    .array(ticketTierSchema)
-    .min(1, "Adicione ao menos um tier")
-    .max(VALIDATION.maxTiers, `Máximo de ${VALIDATION.maxTiers} tiers`),
+  tiers: ticketTiersInputSchema,
 });
 
 export const detalhesSchema = eventInputSchema.pick({

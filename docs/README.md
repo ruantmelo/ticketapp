@@ -40,6 +40,7 @@ A Web2.5 layer (custodial wallets, FIAT payments) hides blockchain complexity fr
 | [architecture/stack.md](architecture/stack.md) | Technology stack summary |
 | [architecture/adr/](architecture/adr/) | Architecture Decision Records |
 | [roadmap.md](roadmap.md) | Milestone-based delivery plan |
+| [local-onchain-development.md](local-onchain-development.md) | Run the Minting Engine locally with Hardhat contracts |
 
 ## Tech Stack
 
@@ -53,6 +54,10 @@ A Web2.5 layer (custodial wallets, FIAT payments) hides blockchain complexity fr
 
 See [architecture/stack.md](architecture/stack.md) for rationale and [architecture/adr/](architecture/adr/) for decision records.
 
+## Local on-chain development
+
+To test event creation and real minting without Polygon Amoy faucet tokens, use the Hardhat local flow in [local-onchain-development.md](local-onchain-development.md).
+
 ## Status
 
-This project is in the **planning phase**. No code has been written yet. See [FEATURE_PLAN.md](FEATURE_PLAN.md) for the current feature status and [roadmap.md](roadmap.md) for delivery milestones.
+This project is in active MVP development. See [FEATURE_PLAN.md](FEATURE_PLAN.md) for the current feature status and [roadmap.md](roadmap.md) for delivery milestones.

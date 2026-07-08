@@ -21,4 +21,12 @@ export const env = {
   jwtSecret: required("JWT_SECRET", "dev-secret-change-me-in-production"),
   cookieDomain: process.env.COOKIE_DOMAIN ?? "localhost",
   webOrigin: process.env.WEB_ORIGIN ?? "http://localhost:5173",
+  onchainMintingEnabled: (process.env.ONCHAIN_MINTING_ENABLED ?? "false") === "true",
+  chainRpcUrl: required("CHAIN_RPC_URL", "https://rpc-amoy.polygon.technology/"),
+  chainPrivateKey: required("CHAIN_PRIVATE_KEY", "0xYOUR_PRIVATE_KEY"),
+  chainId: Number(process.env.CHAIN_ID ?? "80002"),
+  ticketFactoryAddress: required("TICKET_FACTORY_ADDRESS", "0x0000000000000000000000000000000000000000"),
+  ticketMarketplaceAddress: required("TICKET_MARKETPLACE_ADDRESS", "0x0000000000000000000000000000000000000000"),
+  ticketBaseUri: required("TICKET_BASE_URI", "https://example.com/metadata/"),
+  amoyMaxSyncSupply: Number(process.env.AMOY_MAX_SYNC_SUPPLY ?? "1000"),
 } as const;

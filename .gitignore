@@ -9,6 +9,9 @@ dist
 # Backend local data
 apps/api/data
 
+# Local persistent blockchain state
+.local-chain
+
 # Editor
 .vscode
 .idea

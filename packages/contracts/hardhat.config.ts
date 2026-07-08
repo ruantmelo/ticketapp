@@ -20,6 +20,10 @@ export default {
   },
   networks: {
     hardhat: {},
+    localhost: {
+      url: 'http://127.0.0.1:8545',
+      chainId: 31337,
+    },
     polygonAmoy: {
       url: POLYGON_AMOY_RPC_URL ?? '',
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
