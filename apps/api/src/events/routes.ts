@@ -6,8 +6,9 @@ import { events, ticketTiers } from "../db/schema.js";
 import type { EventRow, TicketTierRow } from "../db/schema.js";
 import { requireAuth, requireRole } from "../auth/middleware.js";
 import { eventInputSchema, flattenZodErrors } from "@ticket-chain/shared";
-import { toEvent, toTier, toListItem } from "../db/serializers.js";
-import { deployAndMint } from "../services/minting.service.js";
+import { toEvent, toListItem } from "../db/serializers.js";
+import { enqueueMintingJob, processMintingJob, retryMintingJob } from "../services/minting.queue.js";
+import { env } from "../config.js";
 
 function loadTiers(eventId: string): TicketTierRow[] {
   return db.select().from(ticketTiers).where(eq(ticketTiers.eventId, eventId)).all();
@@ -157,30 +158,60 @@ export async function eventRoutes(app: FastifyInstance): Promise<void> {
         capacity: input.capacity,
         artworkUrl: input.artworkUrl,
         status: "minting",
+        tokenStandard: "ERC-721",
+        totalSupply: input.tiers.reduce((sum, tier) => sum + tier.quantity, 0),
+        avgResaleCapPct: weightedAverage(input.tiers, "resaleCapPct"),
+        avgRoyaltyPct: weightedAverage(input.tiers, "royaltyPct"),
         createdAt: now,
         updatedAt: now,
       })
       .run();
     insertTiers(id, input.tiers);
-    const row = loadOne(id, organizerId)!;
-    const tiers = loadTiers(id).map(toTier);
-
-    const result = await deployAndMint({ id, title: row.title, organizerId, tiers });
+    let jobId: string;
+    try {
+      jobId = await enqueueMintingJob({ eventId: id, organizerId });
+    } catch (error) {
+      if (!env.onchainMintingEnabled) {
+        await processMintingJob({ eventId: id, organizerId });
+        return reply.code(201).send(toEvent(loadOne(id, organizerId)!, loadTiers(id)));
+      }
+      db.update(events)
+        .set({
+          status: "mint_failed",
+          mintError: error instanceof Error ? error.message : "Falha ao enfileirar minting",
+          updatedAt: new Date(),
+        })
+        .where(eq(events.id, id))
+        .run();
+      return reply.code(201).send(toEvent(loadOne(id, organizerId)!, loadTiers(id)));
+    }
 
     db.update(events)
       .set({
-        status: "minted",
-        contractAddress: result.contractAddress,
-        tokenStandard: result.tokenStandard,
-        totalSupply: result.totalSupply,
-        avgResaleCapPct: result.avgResaleCapPct,
-        avgRoyaltyPct: result.avgRoyaltyPct,
+        mintJobId: jobId,
         updatedAt: new Date(),
       })
       .where(eq(events.id, id))
       .run();
 
     return reply.code(201).send(toEvent(loadOne(id, organizerId)!, loadTiers(id)));
+  });
+
+  app.post("/events/:id/minting/retry", { onRequest: requireRole(["organizer"]) }, async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const organizerId = request.user!.sub;
+    const row = loadOne(id, organizerId);
+    if (!row) return reply.code(404).send({ code: "NOT_FOUND", message: "Evento não encontrado." });
+    if (row.status !== "mint_failed") {
+      return reply.code(400).send({ code: "VALIDATION", message: "Apenas eventos com mint_failed podem ser reenfileirados." });
+    }
+
+    const jobId = await retryMintingJob({ eventId: id, organizerId });
+    db.update(events)
+      .set({ status: "minting", mintJobId: jobId, mintError: null, updatedAt: new Date() })
+      .where(eq(events.id, id))
+      .run();
+    return reply.send(toEvent(loadOne(id, organizerId)!, loadTiers(id)));
   });
 }
 
@@ -200,4 +231,10 @@ function insertTiers(eventId: string, tiers: { name: string; quantity: number; f
       })
       .run();
   }
+}
+
+function weightedAverage(tiers: { quantity: number; resaleCapPct: number; royaltyPct: number }[], key: "resaleCapPct" | "royaltyPct"): number {
+  const totalSupply = tiers.reduce((sum, tier) => sum + tier.quantity, 0);
+  if (totalSupply === 0) return 0;
+  return Math.round(tiers.reduce((sum, tier) => sum + tier[key] * tier.quantity, 0) / totalSupply);
 }

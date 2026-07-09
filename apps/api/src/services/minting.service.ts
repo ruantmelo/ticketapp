@@ -22,6 +22,16 @@ export interface MintingResult extends OnChainPreview {
   eventId: string;
 }
 
+export type MintedTokenMetadata = {
+  tokenId: number;
+  tierId: string;
+  onChainTierId: number;
+};
+
+type MintingHooks = {
+  onContractResolved?: (result: MintingResult) => void | Promise<void>;
+};
+
 type MintableEvent = {
   id: string;
   title: string;
@@ -46,8 +56,12 @@ const TICKETING_CHAIN: Chain = defineChain({
     : { default: { name: "Polygonscan", url: "https://amoy.polygonscan.com" } },
 });
 
-export async function deployAndMint(event: MintableEvent): Promise<MintingResult> {
-  if (!env.onchainMintingEnabled) return mockMint(event);
+export async function deployAndMint(event: MintableEvent, hooks: MintingHooks = {}): Promise<MintingResult> {
+  if (!env.onchainMintingEnabled) {
+    const result = mockMint(event);
+    await hooks.onContractResolved?.(result);
+    return result;
+  }
 
   validateChainConfig();
 
@@ -73,6 +87,7 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
 
   const royaltyBps = BigInt(royaltyPct * 100);
   const maxResalePriceMultiplier = BigInt(resaleCapPct);
+  const baseTokenUri = buildEventBaseTokenUri(event.id);
   const mappedTiers = tiers.map((tier) => ({
     tierId: tier.onChainTierId,
     tierReference: keccak256(toBytes(tier.id)),
@@ -97,7 +112,6 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
     args: [eventReference],
   })) as Address;
 
-  let createdNew = false;
   if (contractAddress === zeroAddress) {
     const { request } = await publicClient.simulateContract({
       account,
@@ -110,7 +124,7 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
         eventReference,
         maxResalePriceMultiplier,
         royaltyBps,
-        env.ticketBaseUri,
+        baseTokenUri,
         mappedTiers,
       ],
     });
@@ -124,10 +138,20 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
       functionName: "ticketContractsByEventReference",
       args: [eventReference],
     })) as Address;
-    createdNew = true;
   }
 
-  await assertTicketPreflight(publicClient, ticketNftAbi, contractAddress, organizer, marketplaceAddress);
+  await assertTicketPreflight(publicClient, ticketNftAbi, contractAddress, {
+    organizer,
+    marketplaceAddress,
+    eventReference,
+    maxResalePriceMultiplier,
+    royaltyBps,
+    baseTokenUri,
+    tiers,
+  });
+
+  const resolvedContract = buildResult(event.id, contractAddress, totalSupply, resaleCapPct, royaltyPct, organizer);
+  await hooks.onContractResolved?.(resolvedContract);
 
   const finalized = (await publicClient.readContract({
     address: contractAddress,
@@ -136,12 +160,7 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
   })) as boolean;
 
   if (finalized) {
-    return buildResult(event.id, contractAddress, totalSupply, resaleCapPct, royaltyPct, organizer);
-  }
-
-  if (!createdNew) {
-    await finalizeExistingContract(publicClient, walletClient, ticketNftAbi, contractAddress);
-    return buildResult(event.id, contractAddress, totalSupply, resaleCapPct, royaltyPct, organizer);
+    return resolvedContract;
   }
 
   for (const tier of tiers) {
@@ -149,7 +168,19 @@ export async function deployAndMint(event: MintableEvent): Promise<MintingResult
   }
 
   await finalizeMinting(publicClient, walletClient, ticketNftAbi, contractAddress);
-  return buildResult(event.id, contractAddress, totalSupply, resaleCapPct, royaltyPct, organizer);
+  return resolvedContract;
+}
+
+export function buildMockMintedTokens(tiers: TicketTier[]): MintedTokenMetadata[] {
+  const tokens: MintedTokenMetadata[] = [];
+  let tokenId = 1;
+  for (const tier of normalizeTiers(tiers)) {
+    for (let i = 0; i < tier.quantity; i++) {
+      tokens.push({ tokenId, tierId: tier.id, onChainTierId: Number(tier.onChainTierId) });
+      tokenId++;
+    }
+  }
+  return tokens;
 }
 
 function mockMint(event: MintableEvent): MintingResult {
@@ -193,21 +224,58 @@ async function assertTicketPreflight(
   publicClient: ReturnType<typeof createPublicClient>,
   abi: Abi,
   contractAddress: Address,
-  organizer: Address,
-  marketplaceAddress: Address,
+  expected: {
+    organizer: Address;
+    marketplaceAddress: Address;
+    eventReference: `0x${string}`;
+    maxResalePriceMultiplier: bigint;
+    royaltyBps: bigint;
+    baseTokenUri: string;
+    tiers: NormalizedTier[];
+  },
 ): Promise<void> {
-  const [ticketOrganizer, ticketOwner, ticketMarketplace] = await Promise.all([
+  const [ticketOrganizer, ticketOwner, ticketMarketplace, ticketEventReference, ticketPriceCap, ticketRoyalty, ticketBaseUri, ticketTierIds] = await Promise.all([
     publicClient.readContract({ address: contractAddress, abi, functionName: "organizer" }),
     publicClient.readContract({ address: contractAddress, abi, functionName: "owner" }),
     publicClient.readContract({ address: contractAddress, abi, functionName: "marketplace" }),
+    publicClient.readContract({ address: contractAddress, abi, functionName: "eventReference" }),
+    publicClient.readContract({ address: contractAddress, abi, functionName: "maxResalePriceMultiplier" }),
+    publicClient.readContract({ address: contractAddress, abi, functionName: "royaltyPercentage" }),
+    publicClient.readContract({ address: contractAddress, abi, functionName: "baseTokenURI" }),
+    publicClient.readContract({ address: contractAddress, abi, functionName: "tierIds" }),
   ]);
 
   if (
-    getAddress(ticketOrganizer as Address) !== organizer ||
-    getAddress(ticketOwner as Address) !== organizer ||
-    getAddress(ticketMarketplace as Address) !== marketplaceAddress
+    getAddress(ticketOrganizer as Address) !== expected.organizer ||
+    getAddress(ticketOwner as Address) !== expected.organizer ||
+    getAddress(ticketMarketplace as Address) !== expected.marketplaceAddress ||
+    ticketEventReference !== expected.eventReference ||
+    ticketPriceCap !== expected.maxResalePriceMultiplier ||
+    ticketRoyalty !== expected.royaltyBps ||
+    ticketBaseUri !== expected.baseTokenUri
   ) {
     throw new Error("Existing ticket contract failed preflight checks");
+  }
+
+  const onChainTierIds = ticketTierIds as bigint[];
+  if (onChainTierIds.length !== expected.tiers.length) throw new Error("Existing ticket contract tier count mismatch");
+
+  for (const tier of expected.tiers) {
+    if (!onChainTierIds.includes(tier.onChainTierId)) throw new Error(`Existing ticket contract missing tier ${tier.id}`);
+    const [tierReference, configuredSupply, mintedSupply, faceValue] = await publicClient.readContract({
+      address: contractAddress,
+      abi,
+      functionName: "tierInfo",
+      args: [tier.onChainTierId],
+    }) as [`0x${string}`, bigint, bigint, bigint];
+    if (
+      tierReference !== keccak256(toBytes(tier.id)) ||
+      configuredSupply !== BigInt(tier.quantity) ||
+      faceValue !== BigInt(tier.faceValue) ||
+      mintedSupply > BigInt(tier.quantity)
+    ) {
+      throw new Error(`Existing ticket contract tier ${tier.id} failed preflight checks`);
+    }
   }
 }
 
@@ -218,7 +286,18 @@ async function mintTierChunks(
   contractAddress: Address,
   tier: NormalizedTier,
 ): Promise<void> {
-  for (let minted = 0; minted < tier.quantity; minted += 100) {
+  const mintedSupply = (await publicClient.readContract({
+    address: contractAddress,
+    abi,
+    functionName: "tierMintedSupply",
+    args: [tier.onChainTierId],
+  })) as bigint;
+  const alreadyMinted = Number(mintedSupply);
+  if (!Number.isSafeInteger(alreadyMinted) || alreadyMinted > tier.quantity) {
+    throw new Error(`Tier ${tier.id} minted supply is inconsistent with configured supply`);
+  }
+
+  for (let minted = alreadyMinted; minted < tier.quantity; minted += 100) {
     const quantity = Math.min(100, tier.quantity - minted);
     const { request } = await publicClient.simulateContract({
       account: walletClient.account,
@@ -230,21 +309,6 @@ async function mintTierChunks(
     const hash = await walletClient.writeContract(request);
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     if (receipt.status !== "success") throw new Error("mintBatch transaction failed");
-  }
-}
-
-async function finalizeExistingContract(
-  publicClient: ReturnType<typeof createPublicClient>,
-  walletClient: ReturnType<typeof createWalletClient>,
-  abi: Abi,
-  contractAddress: Address,
-): Promise<void> {
-  try {
-    await finalizeMinting(publicClient, walletClient, abi, contractAddress);
-  } catch (error) {
-    throw new Error(
-      `Existing unfinalized contract requires manual recovery and does not satisfy full F-ORG-02 retry semantics yet: ${(error as Error).message}`,
-    );
   }
 }
 
@@ -305,6 +369,10 @@ function validateChainConfig(): void {
   if (!Number.isSafeInteger(env.amoyMaxSyncSupply) || env.amoyMaxSyncSupply <= 0) {
     throw new Error("AMOY_MAX_SYNC_SUPPLY must be a positive safe integer");
   }
+}
+
+function buildEventBaseTokenUri(eventId: string): string {
+  return `${env.ticketBaseUri.replace(/\/+$/, "")}/${eventId}/`;
 }
 
 function loadArtifactAbi(name: "TicketFactory" | "TicketNFT"): Abi {

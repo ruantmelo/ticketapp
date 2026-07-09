@@ -35,10 +35,21 @@ describe('TicketNFT', () => {
 
   it('mints, batches, exposes views, and finalizes', async () => {
     const { nft, organizer } = await deployFixture();
+    assert.deepEqual(await nft.read.tierIds(), [1n, 2n]);
+    assert.equal(await nft.read.baseTokenURI(), 'https://example.com/tickets/');
+    assert.deepEqual(await nft.read.tierInfo([1n]), [`0x${'22'.repeat(32)}`, 2n, 0n, 1000n]);
+    assert.equal(await nft.read.tierMintedSupply([1n]), 0n);
+    await expectRevert(() => nft.read.tierInfo([999n]));
+    await expectRevert(() => nft.read.tierMintedSupply([999n]));
     await nft.write.mintBatch([1n, 1n], { account: organizer.account });
+    assert.deepEqual(await nft.read.tierInfo([1n]), [`0x${'22'.repeat(32)}`, 2n, 1n, 1000n]);
+    assert.equal(await nft.read.tierMintedSupply([1n]), 1n);
+    assert.equal(await nft.read.tierMintedSupply([2n]), 0n);
     await expectRevert(() => nft.write.finalizeMinting({ account: organizer.account }));
     await nft.write.mintBatch([1n, 1n], { account: organizer.account });
     await nft.write.mintBatch([2n, 1n], { account: organizer.account });
+    assert.deepEqual(await nft.read.tierInfo([1n]), [`0x${'22'.repeat(32)}`, 2n, 2n, 1000n]);
+    assert.deepEqual(await nft.read.tierInfo([2n]), [`0x${'33'.repeat(32)}`, 1n, 1n, 2000n]);
     assert.equal(await nft.read.tierOf([1n]), 1n);
     assert.equal(await nft.read.faceValue([1n]), 1000n);
     assert.equal(await nft.read.maxResalePrice([1n]), 1500n);
@@ -47,6 +58,7 @@ describe('TicketNFT', () => {
     assert.equal(receiver.toLowerCase(), organizer.account.address.toLowerCase());
     assert.equal(royaltyAmount, 500n);
     await nft.write.finalizeMinting({ account: organizer.account });
+    assert.equal(await nft.read.tierMintedSupply([1n]), 2n);
     assert.equal(await nft.read.mintingFinalized(), true);
     await expectRevert(() => nft.write.mintBatch([1n, 1n], { account: organizer.account }));
     await expectRevert(() => nft.write.transferOwnership([organizer.account.address], { account: organizer.account }));

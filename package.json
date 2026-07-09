@@ -5,7 +5,7 @@
   "description": "Blockchain-based event ticketing platform that eliminates ticket fraud (cambismo).",
   "packageManager": "pnpm@10.15.1",
   "scripts": {
-    "dev": "pnpm -r --parallel run dev",
+    "dev": "pnpm --filter @ticket-chain/web dev & pnpm --filter @ticket-chain/api dev & pnpm --filter @ticket-chain/api dev:worker & wait",
     "build": "pnpm -r run build",
     "typecheck": "pnpm -r run typecheck",
     "db:push": "pnpm --filter @ticket-chain/api db:push",

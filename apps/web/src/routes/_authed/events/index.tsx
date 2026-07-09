@@ -62,7 +62,7 @@ function MyEventsPage() {
 }
 
 function StatusBadge({ status }: { status: EventListItem["status"] }) {
-  const map = { draft: { variant: "secondary" as const, label: "Rascunho" }, published: { variant: "info" as const, label: "Publicado" }, minting: { variant: "warning" as const, label: "Mintando" }, minted: { variant: "success" as const, label: "Mintado" } };
+  const map = { draft: { variant: "secondary" as const, label: "Rascunho" }, published: { variant: "info" as const, label: "Publicado" }, minting: { variant: "warning" as const, label: "Mintando" }, minted: { variant: "success" as const, label: "Mintado" }, mint_failed: { variant: "destructive" as const, label: "Falha no mint" } };
   const cfg = map[status];
   return <Badge variant={cfg.variant}>{cfg.label}</Badge>;
 }

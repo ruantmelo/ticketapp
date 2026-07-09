@@ -35,6 +35,7 @@ export function toEvent(row: EventRow, tiers: TicketTierRow[]): Event {
     avgResaleCapPct: row.avgResaleCapPct ?? 0,
     avgRoyaltyPct: row.avgRoyaltyPct ?? 0,
     organizerId: row.organizerId,
+    mintError: row.mintError,
   };
   return published;
 }

@@ -27,6 +27,11 @@ export const env = {
   chainId: Number(process.env.CHAIN_ID ?? "80002"),
   ticketFactoryAddress: required("TICKET_FACTORY_ADDRESS", "0x0000000000000000000000000000000000000000"),
   ticketMarketplaceAddress: required("TICKET_MARKETPLACE_ADDRESS", "0x0000000000000000000000000000000000000000"),
-  ticketBaseUri: required("TICKET_BASE_URI", "https://example.com/metadata/"),
+  ticketBaseUri: required("TICKET_BASE_URI", "http://localhost:4000/metadata/"),
   amoyMaxSyncSupply: Number(process.env.AMOY_MAX_SYNC_SUPPLY ?? "1000"),
+  redisUrl: required("REDIS_URL", "redis://127.0.0.1:6379"),
+  mintingQueueConcurrency: Number(process.env.MINTING_QUEUE_CONCURRENCY ?? "1"),
+  bullBoardEnabled: (process.env.BULL_BOARD_ENABLED ?? (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test" ? "false" : "true")) === "true",
+  bullBoardBasePath: process.env.BULL_BOARD_BASE_PATH ?? "/admin/queues",
+  bullBoardAllowRemote: (process.env.BULL_BOARD_ALLOW_REMOTE ?? "false") === "true",
 } as const;

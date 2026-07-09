@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
 export const userRoles = ["organizer", "buyer", "validator"] as const;
@@ -23,7 +23,7 @@ export const events = sqliteTable("events", {
   startsAt: text("starts_at").notNull(),
   capacity: integer("capacity").notNull(),
   artworkUrl: text("artwork_url"),
-  status: text("status", { enum: ["draft", "published", "minting", "minted"] })
+  status: text("status", { enum: ["draft", "published", "minting", "minted", "mint_failed"] })
     .notNull()
     .default("draft"),
   contractAddress: text("contract_address"),
@@ -31,6 +31,8 @@ export const events = sqliteTable("events", {
   totalSupply: integer("total_supply"),
   avgResaleCapPct: integer("avg_resale_cap_pct"),
   avgRoyaltyPct: integer("avg_royalty_pct"),
+  mintJobId: text("mint_job_id"),
+  mintError: text("mint_error"),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
   updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 });
@@ -48,6 +50,21 @@ export const ticketTiers = sqliteTable("ticket_tiers", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 });
 
+export const ticketTokens = sqliteTable("ticket_tokens", {
+  id: text("id").primaryKey(),
+  eventId: text("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  tokenId: integer("token_id").notNull(),
+  tierId: text("tier_id")
+    .notNull()
+    .references(() => ticketTiers.id, { onDelete: "cascade" }),
+  onChainTierId: integer("on_chain_tier_id").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
+}, (table) => ({
+  eventTokenUnique: uniqueIndex("ticket_tokens_event_token_unique").on(table.eventId, table.tokenId),
+}));
+
 export const eventsRelations = relations(events, ({ one, many }) => ({
   organizer: one(users, { fields: [events.organizerId], references: [users.id] }),
   tiers: many(ticketTiers),
@@ -57,7 +74,13 @@ export const ticketTiersRelations = relations(ticketTiers, ({ one }) => ({
   event: one(events, { fields: [ticketTiers.eventId], references: [events.id] }),
 }));
 
+export const ticketTokensRelations = relations(ticketTokens, ({ one }) => ({
+  event: one(events, { fields: [ticketTokens.eventId], references: [events.id] }),
+  tier: one(ticketTiers, { fields: [ticketTokens.tierId], references: [ticketTiers.id] }),
+}));
+
 export type UserRow = typeof users.$inferSelect;
 export type UserRole = (typeof userRoles)[number];
 export type EventRow = typeof events.$inferSelect;
 export type TicketTierRow = typeof ticketTiers.$inferSelect;
+export type TicketTokenRow = typeof ticketTokens.$inferSelect;

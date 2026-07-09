@@ -131,6 +131,18 @@ contract TicketNFT is ERC721, ERC2981, Ownable {
     }
 
     function tierOf(uint256 tokenId) external view returns (uint256) { _requireOwned(tokenId); return _tokenTierIds[tokenId]; }
+    function tierIds() external view returns (uint256[] memory) { return _tierIds; }
+    function baseTokenURI() external view returns (string memory) { return _baseTokenURI; }
+    function tierInfo(uint256 tierId) external view returns (bytes32 tierReference, uint256 configuredSupply, uint256 mintedSupply, uint256 tierFaceValue) {
+        Tier storage tier = _tiers[tierId];
+        require(tier.exists, 'tier');
+        return (tier.tierReference, tier.configuredSupply, tier.mintedSupply, tier.faceValue);
+    }
+    function tierMintedSupply(uint256 tierId) external view returns (uint256) {
+        Tier storage tier = _tiers[tierId];
+        require(tier.exists, 'tier');
+        return tier.mintedSupply;
+    }
     function faceValue(uint256 tokenId) public view returns (uint256) { _requireOwned(tokenId); return _tiers[_tokenTierIds[tokenId]].faceValue; }
     function maxResalePrice(uint256 tokenId) external view returns (uint256) { return (faceValue(tokenId) * maxResalePriceMultiplier) / 100; }
 

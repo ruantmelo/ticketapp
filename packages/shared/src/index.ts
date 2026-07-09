@@ -12,7 +12,7 @@ export const VALIDATION = {
   maxTiers: 10,
 } as const;
 
-export const eventStatusSchema = z.enum(["draft", "published", "minting", "minted"]);
+export const eventStatusSchema = z.enum(["draft", "published", "minting", "minted", "mint_failed"]);
 export const tokenStandardSchema = z.literal("ERC-721");
 export const userRoleSchema = z.enum(["organizer", "buyer", "validator"]);
 
@@ -136,13 +136,14 @@ export const eventDraftSchema = eventCoreSchema.extend({
 });
 
 export const eventPublishedSchema = eventCoreSchema.extend({
-  status: z.enum(["published", "minting", "minted"]),
+  status: z.enum(["published", "minting", "minted", "mint_failed"]),
   contractAddress: z.string(),
   tokenStandard: tokenStandardSchema,
   totalSupply: z.number(),
   avgResaleCapPct: z.number(),
   avgRoyaltyPct: z.number(),
   organizerId: z.string(),
+  mintError: z.string().nullable(),
 });
 
 export const eventSchema = z.discriminatedUnion("status", [
