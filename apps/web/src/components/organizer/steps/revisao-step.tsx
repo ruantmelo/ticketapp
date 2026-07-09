@@ -9,17 +9,13 @@ interface Props {
 
 export function RevisaoStep({ form }: Props) {
   const { form: data } = form;
-  const totalSupply = data.tiers.reduce((s, t) => s + t.quantity, 0);
-  const sumResale = data.tiers.reduce((s, t) => s + t.resaleCapPct * t.quantity, 0);
-  const sumRoyalty = data.tiers.reduce((s, t) => s + t.royaltyPct * t.quantity, 0);
-  const avgCap = totalSupply > 0 ? Math.round(sumResale / totalSupply) : 0;
-  const avgRoyalty = totalSupply > 0 ? Math.round(sumRoyalty / totalSupply) : 0;
+  const marketRule = data.tiers[0] ?? { resaleCapPct: 120, royaltyPct: 5 };
 
   return (
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>Revisão & parâmetros on-chain</CardTitle>
+          <CardTitle>Revisão do evento</CardTitle>
           <CardDescription>
             Confira os parâmetros antes de mintar seus ingressos.
           </CardDescription>
@@ -56,19 +52,13 @@ export function RevisaoStep({ form }: Props) {
               <thead className="bg-muted/30">
                 <tr className="border-b border-border">
                   <th className="px-3 py-2 text-left text-xs font-medium uppercase text-muted-foreground">
-                    Tier
+                    Nome
                   </th>
                   <th className="px-3 py-2 text-right text-xs font-medium uppercase text-muted-foreground">
                     Qtd
                   </th>
                   <th className="px-3 py-2 text-right text-xs font-medium uppercase text-muted-foreground">
                     Preço
-                  </th>
-                  <th className="px-3 py-2 text-right text-xs font-medium uppercase text-muted-foreground">
-                    Cap
-                  </th>
-                  <th className="px-3 py-2 text-right text-xs font-medium uppercase text-muted-foreground">
-                    Royalty
                   </th>
                 </tr>
               </thead>
@@ -82,12 +72,6 @@ export function RevisaoStep({ form }: Props) {
                     <td className="px-3 py-2 text-right text-muted-foreground">
                       {formatCurrency(tier.faceValue)}
                     </td>
-                    <td className="px-3 py-2 text-right text-muted-foreground">
-                      {tier.resaleCapPct}%
-                    </td>
-                    <td className="px-3 py-2 text-right text-muted-foreground">
-                      {tier.royaltyPct}%
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -98,20 +82,21 @@ export function RevisaoStep({ form }: Props) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Parâmetros on-chain</CardTitle>
+          <CardTitle>Regras do mercado secundário</CardTitle>
           <CardDescription>
-            Serão definidos no contrato no momento do mint.
+            Estas regras valem para todos os tiers do evento.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <dl className="grid grid-cols-2 gap-x-8 gap-y-4">
-            <ParamRow label="Padrão de token" value="ERC-721" />
-            <ParamRow label="Endereço do contrato" value="a definir no mint" mono />
-            <ParamRow label="Supply total" value={String(totalSupply)} />
-            <ParamRow label="Cap de revenda médio" value={`${avgCap}%`} />
-            <ParamRow label="Royalty média" value={`${avgRoyalty}%`} />
-            <ParamRow label="Royalty destinatário" value="Organizador (você)" />
+            <ParamRow label="Preço máximo de revenda" value={`${marketRule.resaleCapPct}%`} />
+            <ParamRow label="Royalty do organizador" value={`${marketRule.royaltyPct}%`} />
+            <ParamRow label="Marketplace obrigatório" value="Sim" />
+            <ParamRow label="Transferências diretas" value="Bloqueadas" />
           </dl>
+          <p className="mt-4 text-sm text-muted-foreground">
+            As revendas acontecem apenas pelo marketplace da plataforma.
+          </p>
         </CardContent>
       </Card>
     </div>

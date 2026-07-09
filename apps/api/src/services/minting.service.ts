@@ -241,7 +241,7 @@ async function assertTicketPreflight(
     publicClient.readContract({ address: contractAddress, abi, functionName: "eventReference" }),
     publicClient.readContract({ address: contractAddress, abi, functionName: "maxResalePriceMultiplier" }),
     publicClient.readContract({ address: contractAddress, abi, functionName: "royaltyPercentage" }),
-    publicClient.readContract({ address: contractAddress, abi, functionName: "baseTokenURI" }),
+    readOptionalBaseTokenUri(publicClient, abi, contractAddress),
     publicClient.readContract({ address: contractAddress, abi, functionName: "tierIds" }),
   ]);
 
@@ -252,7 +252,7 @@ async function assertTicketPreflight(
     ticketEventReference !== expected.eventReference ||
     ticketPriceCap !== expected.maxResalePriceMultiplier ||
     ticketRoyalty !== expected.royaltyBps ||
-    ticketBaseUri !== expected.baseTokenUri
+    (ticketBaseUri !== null && ticketBaseUri !== expected.baseTokenUri)
   ) {
     throw new Error("Existing ticket contract failed preflight checks");
   }
@@ -277,6 +277,27 @@ async function assertTicketPreflight(
       throw new Error(`Existing ticket contract tier ${tier.id} failed preflight checks`);
     }
   }
+}
+
+async function readOptionalBaseTokenUri(
+  publicClient: ReturnType<typeof createPublicClient>,
+  abi: Abi,
+  contractAddress: Address,
+): Promise<string | null> {
+  try {
+    return await publicClient.readContract({ address: contractAddress, abi, functionName: "baseTokenURI" }) as string;
+  } catch (error) {
+    if (!isMissingBaseTokenUriGetterError(error)) throw error;
+    return null;
+  }
+}
+
+function isMissingBaseTokenUriGetterError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false;
+  const message = error.message;
+  return message.includes('The contract function "baseTokenURI" reverted') ||
+    message.includes('Function "baseTokenURI" not found') ||
+    message.includes('function selector was not recognized');
 }
 
 async function mintTierChunks(

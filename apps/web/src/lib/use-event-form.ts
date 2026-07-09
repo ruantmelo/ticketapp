@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { isApiError } from "@/lib/auth";
 import { sessionQuery } from "@/lib/queries";
 
-function newTier(): TicketTier {
+function newTier(overrides: Partial<TicketTier> = {}): TicketTier {
   return {
     id: createClientId(),
     name: "",
@@ -14,6 +14,7 @@ function newTier(): TicketTier {
     faceValue: 0,
     resaleCapPct: 120,
     royaltyPct: 5,
+    ...overrides,
   };
 }
 
@@ -73,11 +74,27 @@ export function useEventForm() {
     }));
   }, []);
 
+  const updateMarketRules = React.useCallback((patch: Partial<Pick<TicketTier, "resaleCapPct" | "royaltyPct">>) => {
+    setForm((prev) => ({
+      ...prev,
+      tiers: prev.tiers.map((tier) => ({ ...tier, ...patch })),
+    }));
+  }, []);
+
   const addTier = React.useCallback(() => {
     setForm((prev) =>
       prev.tiers.length >= VALIDATION.maxTiers
         ? prev
-        : { ...prev, tiers: [...prev.tiers, newTier()] },
+        : {
+            ...prev,
+            tiers: [
+              ...prev.tiers,
+              newTier({
+                resaleCapPct: prev.tiers[0]?.resaleCapPct ?? 120,
+                royaltyPct: prev.tiers[0]?.royaltyPct ?? 5,
+              }),
+            ],
+          },
     );
   }, []);
 
@@ -122,6 +139,7 @@ export function useEventForm() {
     lastSavedAt,
     update,
     updateTier,
+    updateMarketRules,
     addTier,
     removeTier,
     loadDraft,

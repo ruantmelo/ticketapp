@@ -1,12 +1,13 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export const WIZARD_STEPS = ["detalhes", "ingressos", "revisao"] as const;
+export const WIZARD_STEPS = ["detalhes", "ingressos", "mercado_secundario", "revisao"] as const;
 export type WizardStep = (typeof WIZARD_STEPS)[number];
 
 export const STEP_LABELS: Record<WizardStep, string> = {
   detalhes: "Detalhes",
   ingressos: "Ingressos",
+  mercado_secundario: "Mercado secundário",
   revisao: "Revisão",
 };
 

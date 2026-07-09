@@ -1,12 +1,11 @@
 import * as React from "react";
-import { PlusCircle, Trash2, Info } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import type { EventForm } from "@/lib/use-event-form";
 import { VALIDATION } from "@ticket-chain/shared";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Alert } from "@/components/ui/alert";
 
 interface Props {
   form: EventForm;
@@ -23,7 +22,7 @@ export function IngressosStep({ form, errors }: Props) {
         <div className="flex flex-col gap-1.5">
           <CardTitle>Ingressos</CardTitle>
           <CardDescription>
-            Defina os tiers, quantidades, preços e regras de revenda.
+            Defina os tiers, quantidades e preços.
           </CardDescription>
         </div>
         <Button variant="outline" onClick={addTier} disabled={maxed}>
@@ -32,21 +31,13 @@ export function IngressosStep({ form, errors }: Props) {
         </Button>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <Alert variant="info" title="Cap de revenda & Royalty">
-          O cap de revenda limita o preço máximo no mercado secundário (ex.: 120% do valor
-          oficial). A royalty repassa automaticamente ao organizador uma porcentagem de cada
-          revenda.
-        </Alert>
-
         <div className="overflow-x-auto border border-border">
           <table className="w-full text-sm">
             <thead className="bg-muted/30">
               <tr className="border-b border-border">
-                <Th>Tier</Th>
+                <Th>Nome</Th>
                 <Th>Quantidade</Th>
                 <Th>Preço (R$)</Th>
-                <Th>Cap revenda (%)</Th>
-                <Th>Royalty (%)</Th>
                 <Th className="w-12"></Th>
               </tr>
             </thead>
@@ -90,38 +81,6 @@ export function IngressosStep({ form, errors }: Props) {
                     {errors[`tiers.${i}.faceValue`] && (
                       <p className="mt-1 text-xs text-destructive">
                         {errors[`tiers.${i}.faceValue`]}
-                      </p>
-                    )}
-                  </td>
-                  <td className="p-2">
-                    <Input
-                      type="number"
-                      min={VALIDATION.resaleCapPctMin}
-                      max={VALIDATION.resaleCapPctMax}
-                      value={tier.resaleCapPct}
-                      onChange={(e) =>
-                        updateTier(tier.id, { resaleCapPct: Number(e.target.value) })
-                      }
-                      aria-label={`Cap de revenda do tier ${i + 1}`}
-                    />
-                    {errors[`tiers.${i}.resaleCapPct`] && (
-                      <p className="mt-1 text-xs text-destructive">
-                        {errors[`tiers.${i}.resaleCapPct`]}
-                      </p>
-                    )}
-                  </td>
-                  <td className="p-2">
-                    <Input
-                      type="number"
-                      min={VALIDATION.royaltyPctMin}
-                      max={VALIDATION.royaltyPctMax}
-                      value={tier.royaltyPct}
-                      onChange={(e) => updateTier(tier.id, { royaltyPct: Number(e.target.value) })}
-                      aria-label={`Royalty do tier ${i + 1}`}
-                    />
-                    {errors[`tiers.${i}.royaltyPct`] && (
-                      <p className="mt-1 text-xs text-destructive">
-                        {errors[`tiers.${i}.royaltyPct`]}
                       </p>
                     )}
                   </td>
