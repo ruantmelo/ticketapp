@@ -35,6 +35,7 @@ export const api = {
   listEvents: () => request<{ items: EventListItem[] }>("/events"),
   listDrafts: () => request<{ items: EventListItem[] }>("/events/drafts"),
   getEvent: (id: string) => request<Event>(`/events/${id}`),
+  retryMinting: (id: string) => request<Event>(`/events/${id}/minting/retry`, { method: "POST" }),
   saveDraft: (data: EventInput) =>
     request<Event>("/events/draft", { method: "POST", body: JSON.stringify(data) }),
   updateDraft: (id: string, data: EventInput) =>

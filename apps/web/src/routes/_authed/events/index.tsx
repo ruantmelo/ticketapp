@@ -48,7 +48,7 @@ function MyEventsPage() {
       {!isLoading && !error && items.length > 0 && (
         <Table>
           <THead><TR><TH>Evento</TH><TH>Data</TH><TH>Local</TH><TH>Ingressos</TH><TH>Status</TH><TH className="w-12">Ações</TH></TR></THead>
-          <TBody>{items.map((event) => <TR key={event.id}><TD className="font-medium text-foreground">{event.title}</TD><TD className="text-muted-foreground">{formatDateShort(event.startsAt)}</TD><TD className="text-muted-foreground">{event.location}</TD><TD className="text-muted-foreground">{event.ticketCount}</TD><TD><StatusBadge status={event.status} /></TD><TD><Button variant="ghost" size="icon" disabled><MoreHorizontal className="h-4 w-4" /></Button></TD></TR>)}</TBody>
+          <TBody>{items.map((event) => <TR key={event.id}><TD className="font-medium text-foreground"><Link to="/events/$eventId" params={{ eventId: event.id }} className="hover:underline">{event.title}</Link></TD><TD className="text-muted-foreground">{formatDateShort(event.startsAt)}</TD><TD className="text-muted-foreground">{event.location}</TD><TD className="text-muted-foreground">{event.ticketCount}</TD><TD><StatusBadge status={event.status} /></TD><TD><div className="flex items-center justify-end gap-2"><Link to="/events/$eventId" params={{ eventId: event.id }}><Button variant="ghost" size="sm">Ver detalhes</Button></Link><Button variant="ghost" size="icon" disabled><MoreHorizontal className="h-4 w-4" /></Button></div></TD></TR>)}</TBody>
         </Table>
       )}
       {!isLoading && !error && items.length > 0 && (

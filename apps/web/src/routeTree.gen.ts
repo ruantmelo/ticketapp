@@ -17,6 +17,7 @@ import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events/index'
 import { Route as AuthedEventsNewRouteImport } from './routes/_authed/events/new'
+import { Route as AuthedEventsEventIdRouteImport } from './routes/_authed/events/$eventId'
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
@@ -56,12 +57,18 @@ const AuthedEventsNewRoute = AuthedEventsNewRouteImport.update({
   path: '/events/new',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedEventsEventIdRoute = AuthedEventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/confirm': typeof AuthedConfirmRoute
+  '/events/$eventId': typeof AuthedEventsEventIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events/': typeof AuthedEventsIndexRoute
 }
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/confirm': typeof AuthedConfirmRoute
+  '/events/$eventId': typeof AuthedEventsEventIdRoute
   '/events/new': typeof AuthedEventsNewRoute
   '/events': typeof AuthedEventsIndexRoute
 }
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_authed/confirm': typeof AuthedConfirmRoute
+  '/_authed/events/$eventId': typeof AuthedEventsEventIdRoute
   '/_authed/events/new': typeof AuthedEventsNewRoute
   '/_authed/events/': typeof AuthedEventsIndexRoute
 }
@@ -91,10 +100,18 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/confirm'
+    | '/events/$eventId'
     | '/events/new'
     | '/events/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/confirm' | '/events/new' | '/events'
+  to:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/confirm'
+    | '/events/$eventId'
+    | '/events/new'
+    | '/events'
   id:
     | '__root__'
     | '/'
@@ -103,6 +120,7 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/register'
     | '/_authed/confirm'
+    | '/_authed/events/$eventId'
     | '/_authed/events/new'
     | '/_authed/events/'
   fileRoutesById: FileRoutesById
@@ -171,6 +189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedEventsNewRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/events/$eventId': {
+      id: '/_authed/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/events/$eventId'
+      preLoaderRoute: typeof AuthedEventsEventIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
@@ -188,12 +213,14 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AuthedRouteChildren {
   AuthedConfirmRoute: typeof AuthedConfirmRoute
+  AuthedEventsEventIdRoute: typeof AuthedEventsEventIdRoute
   AuthedEventsNewRoute: typeof AuthedEventsNewRoute
   AuthedEventsIndexRoute: typeof AuthedEventsIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedConfirmRoute: AuthedConfirmRoute,
+  AuthedEventsEventIdRoute: AuthedEventsEventIdRoute,
   AuthedEventsNewRoute: AuthedEventsNewRoute,
   AuthedEventsIndexRoute: AuthedEventsIndexRoute,
 }
