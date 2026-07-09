@@ -140,6 +140,11 @@ export const eventPublishedSchema = eventCoreSchema.extend({
   contractAddress: z.string(),
   tokenStandard: tokenStandardSchema,
   totalSupply: z.number(),
+  mintProgress: z.object({
+    mintedCount: z.number(),
+    totalSupply: z.number(),
+    percent: z.number(),
+  }),
   avgResaleCapPct: z.number(),
   avgRoyaltyPct: z.number(),
   organizerId: z.string(),

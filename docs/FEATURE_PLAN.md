@@ -11,6 +11,8 @@ This is the single source of truth for feature development status. Update the **
 | `Blocked` | Development is blocked by a dependency or open decision. |
 | `Done` | Complete and verified. |
 
+F-ORG-02 has local Hardhat + API + frontend minting validated, with Amoy smoke documented. It remains `In Progress` until Polygon Amoy execution is validated and F-BUY-02 marketplace readiness is available.
+
 ## Priority Legend
 
 | Priority | Meaning |

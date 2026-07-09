@@ -160,6 +160,8 @@ export async function eventRoutes(app: FastifyInstance): Promise<void> {
         status: "minting",
         tokenStandard: "ERC-721",
         totalSupply: input.tiers.reduce((sum, tier) => sum + tier.quantity, 0),
+        mintTotal: input.tiers.reduce((sum, tier) => sum + tier.quantity, 0),
+        mintCount: 0,
         avgResaleCapPct: weightedAverage(input.tiers, "resaleCapPct"),
         avgRoyaltyPct: weightedAverage(input.tiers, "royaltyPct"),
         createdAt: now,
@@ -179,6 +181,8 @@ export async function eventRoutes(app: FastifyInstance): Promise<void> {
         .set({
           status: "mint_failed",
           mintError: error instanceof Error ? error.message : "Falha ao enfileirar minting",
+          mintCount: 0,
+          mintTotal: input.tiers.reduce((sum, tier) => sum + tier.quantity, 0),
           updatedAt: new Date(),
         })
         .where(eq(events.id, id))
@@ -208,7 +212,7 @@ export async function eventRoutes(app: FastifyInstance): Promise<void> {
 
     const jobId = await retryMintingJob({ eventId: id, organizerId });
     db.update(events)
-      .set({ status: "minting", mintJobId: jobId, mintError: null, updatedAt: new Date() })
+      .set({ status: "minting", mintJobId: jobId, mintError: null, mintTotal: row.mintTotal ?? row.totalSupply ?? 0, updatedAt: new Date() })
       .where(eq(events.id, id))
       .run();
     return reply.send(toEvent(loadOne(id, organizerId)!, loadTiers(id)));

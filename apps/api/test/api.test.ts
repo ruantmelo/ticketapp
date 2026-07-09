@@ -84,7 +84,7 @@ describe("minting retry route", () => {
 
     const { buildServer } = await import("../src/app.js");
     const { db } = await import("../src/db/client.js");
-    const { events, ticketTiers, users } = await import("../src/db/schema.js");
+    const { events, ticketTiers, ticketTokens, users } = await import("../src/db/schema.js");
     const { hashPassword } = await import("../src/auth/crypto.js");
     const { eq } = await import("drizzle-orm");
     const now = new Date();
@@ -126,6 +126,156 @@ describe("minting retry route", () => {
   });
 });
 
+describe("minting status flow", () => {
+  it("publishes, processes minting, and completes with real progress", async () => {
+    const deployAndMint = vi.fn(async (_event, hooks) => {
+      await hooks.onContractResolved?.({ eventId: "event-1", tokenStandard: "ERC-721", contractAddress: "0x0000000000000000000000000000000000000002", totalSupply: 2, avgResaleCapPct: 120, avgRoyaltyPct: 5, royaltyReceiver: "organizer-1" });
+      await hooks.onProgress?.(1, 2);
+      await hooks.onProgress?.(2, 2);
+      return { eventId: "event-1", tokenStandard: "ERC-721", contractAddress: "0x0000000000000000000000000000000000000002", totalSupply: 2, avgResaleCapPct: 120, avgRoyaltyPct: 5, royaltyReceiver: "organizer-1" };
+    });
+    vi.doMock("../src/services/minting.service.js", async () => {
+      const actual = await vi.importActual<typeof import("../src/services/minting.service.js")>("../src/services/minting.service.js");
+      return { ...actual, deployAndMint };
+    });
+    vi.doMock("../src/services/minting.queue.js", async () => {
+      const actual = await vi.importActual<typeof import("../src/services/minting.queue.js")>("../src/services/minting.queue.js");
+      return {
+        ...actual,
+        enqueueMintingJob: vi.fn(async () => "queued-job"),
+        retryMintingJob: vi.fn(async () => "retry-job"),
+        closeMintingQueue: vi.fn(async () => undefined),
+      };
+    });
+
+    const { buildServer } = await import("../src/app.js");
+    const { db } = await import("../src/db/client.js");
+    const { events, ticketTiers, ticketTokens, users } = await import("../src/db/schema.js");
+    const { hashPassword } = await import("../src/auth/crypto.js");
+    const { eq } = await import("drizzle-orm");
+    const { processMintingJob } = await import("../src/services/minting.queue.js");
+    const now = new Date();
+
+    db.insert(users).values({ id: "organizer-1", email: "org@example.com", name: "Org", role: "organizer", passwordHash: hashPassword("password123"), createdAt: now }).run();
+    const app = await buildServer();
+    const login = await app.inject({ method: "POST", url: "/auth/login", payload: { email: "org@example.com", password: "password123" } });
+    const cookie = login.headers["set-cookie"];
+
+    const publish = await app.inject({ method: "POST", url: "/events", headers: { cookie }, payload: { title: "Festival UFAL", description: "Noite principal", location: "Maceió", startsAt: "2030-01-02T20:00:00.000Z", capacity: 2, artworkUrl: null, tiers: [{ id: "tier-general", name: "Geral", quantity: 2, faceValue: 1000, resaleCapPct: 120, royaltyPct: 5 }] } });
+    const published = publish.json();
+    expect(published.status).toBe("minting");
+    expect(published.mintProgress).toMatchObject({ mintedCount: 0, totalSupply: 2, percent: 0 });
+
+    const eventRow = db.select().from(events).where(eq(events.id, published.id)).get();
+    expect(eventRow?.status).toBe("minting");
+
+    await processMintingJob({ eventId: published.id, organizerId: "organizer-1" });
+    const minted = db.select().from(events).where(eq(events.id, published.id)).get();
+    expect(minted?.status).toBe("minted");
+    expect(minted?.mintCount).toBe(2);
+    expect(minted?.mintTotal).toBe(2);
+    expect(db.select().from(ticketTokens).where(eq(ticketTokens.eventId, published.id)).all()).toHaveLength(2);
+
+    const detail = await app.inject({ method: "GET", url: `/events/${published.id}`, headers: { cookie } });
+    expect(detail.statusCode).toBe(200);
+    expect(detail.json()).toMatchObject({
+      status: "minted",
+      contractAddress: "0x0000000000000000000000000000000000000002",
+      mintProgress: { mintedCount: 2, totalSupply: 2, percent: 100 },
+    });
+
+    await app.close();
+  });
+
+  it("moves failures to mint_failed and retries through minting to minted", async () => {
+    let shouldFail = true;
+    const deployAndMint = vi.fn(async (_event: unknown, hooks: { onContractResolved?: (result: unknown) => Promise<void> | void; onProgress?: (mintedCount: number, totalSupply: number) => Promise<void> | void }) => {
+      const result = { eventId: "event-2", tokenStandard: "ERC-721", contractAddress: "0x0000000000000000000000000000000000000003", totalSupply: 2, avgResaleCapPct: 120, avgRoyaltyPct: 5, royaltyReceiver: "organizer-1" };
+      await hooks.onContractResolved?.(result);
+      await hooks.onProgress?.(1, 2);
+      if (shouldFail) throw new Error("RPC timeout during mintBatch");
+      await hooks.onProgress?.(2, 2);
+      return result;
+    });
+    vi.doMock("../src/services/minting.service.js", async () => {
+      const actual = await vi.importActual<typeof import("../src/services/minting.service.js")>("../src/services/minting.service.js");
+      return { ...actual, deployAndMint };
+    });
+    vi.doMock("../src/services/minting.queue.js", async () => {
+      const actual = await vi.importActual<typeof import("../src/services/minting.queue.js")>("../src/services/minting.queue.js");
+      return {
+        ...actual,
+        enqueueMintingJob: vi.fn(async () => "queued-job"),
+        retryMintingJob: vi.fn(async () => "retry-job"),
+        closeMintingQueue: vi.fn(async () => undefined),
+      };
+    });
+
+    const { buildServer } = await import("../src/app.js");
+    const { db } = await import("../src/db/client.js");
+    const { events, ticketTiers, ticketTokens, users } = await import("../src/db/schema.js");
+    const { hashPassword } = await import("../src/auth/crypto.js");
+    const { eq } = await import("drizzle-orm");
+    const { processMintingJob } = await import("../src/services/minting.queue.js");
+    const now = new Date();
+
+    db.insert(users).values({ id: "organizer-1", email: "org@example.com", name: "Org", role: "organizer", passwordHash: hashPassword("password123"), createdAt: now }).run();
+    db.insert(events).values({
+      id: "event-2",
+      organizerId: "organizer-1",
+      title: "Festival UFAL",
+      description: "Noite principal",
+      location: "Maceió",
+      startsAt: "2030-01-02T20:00:00.000Z",
+      capacity: 2,
+      artworkUrl: null,
+      status: "minting",
+      tokenStandard: "ERC-721",
+      totalSupply: 2,
+      mintTotal: 2,
+      mintCount: 0,
+      avgResaleCapPct: 120,
+      avgRoyaltyPct: 5,
+      createdAt: now,
+      updatedAt: now,
+    }).run();
+    db.insert(ticketTiers).values({ id: "tier-general", eventId: "event-2", name: "Geral", quantity: 2, faceValue: 1000, resaleCapPct: 120, royaltyPct: 5, createdAt: now }).run();
+
+    const app = await buildServer();
+    const login = await app.inject({ method: "POST", url: "/auth/login", payload: { email: "org@example.com", password: "password123" } });
+    const cookie = login.headers["set-cookie"];
+
+    await expect(processMintingJob({ eventId: "event-2", organizerId: "organizer-1" })).rejects.toThrow("RPC timeout during mintBatch");
+    const failed = db.select().from(events).where(eq(events.id, "event-2")).get();
+    expect(failed?.status).toBe("mint_failed");
+    expect(failed?.mintError).toBe("RPC timeout during mintBatch");
+    expect(failed?.mintCount).toBe(1);
+    expect(failed?.mintTotal).toBe(2);
+
+    const retry = await app.inject({ method: "POST", url: "/events/event-2/minting/retry", headers: { cookie } });
+    expect(retry.statusCode).toBe(200);
+    expect(retry.json()).toMatchObject({ status: "minting", mintError: null, mintProgress: { mintedCount: 1, totalSupply: 2, percent: 50 } });
+
+    shouldFail = false;
+    await processMintingJob({ eventId: "event-2", organizerId: "organizer-1" });
+    const minted = db.select().from(events).where(eq(events.id, "event-2")).get();
+    expect(minted?.status).toBe("minted");
+    expect(minted?.mintCount).toBe(2);
+    expect(minted?.mintTotal).toBe(2);
+    expect(db.select().from(ticketTokens).where(eq(ticketTokens.eventId, "event-2")).all()).toHaveLength(2);
+
+    const detail = await app.inject({ method: "GET", url: "/events/event-2", headers: { cookie } });
+    expect(detail.statusCode).toBe(200);
+    expect(detail.json()).toMatchObject({
+      status: "minted",
+      contractAddress: "0x0000000000000000000000000000000000000003",
+      mintProgress: { mintedCount: 2, totalSupply: 2, percent: 100 },
+    });
+
+    await app.close();
+  });
+});
+
 function createSchema(databaseUrl: string): void {
   const sqlite = new Database(databaseUrl);
   sqlite.exec(`
@@ -151,6 +301,8 @@ function createSchema(databaseUrl: string): void {
       contract_address TEXT,
       token_standard TEXT,
       total_supply INTEGER,
+      mint_total INTEGER,
+      mint_count INTEGER,
       avg_resale_cap_pct INTEGER,
       avg_royalty_pct INTEGER,
       mint_job_id TEXT,

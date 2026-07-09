@@ -15,7 +15,14 @@ import { cn, formatCurrency, formatDate } from "@/lib/utils";
 function EventDetailsPage() {
   const { eventId } = Route.useParams();
   const queryClient = useQueryClient();
-  const { data: event, isLoading, error } = useQuery(eventDetailQuery(eventId));
+  const detailQuery = eventDetailQuery(eventId);
+  const { data: event, isLoading, error } = useQuery({
+    ...detailQuery,
+    refetchInterval: (query) => {
+      const current = query.state.data as Event | undefined;
+      return current?.status === "minting" ? 2_000 : false;
+    },
+  });
   const retryMinting = useMutation({
     mutationFn: () => api.retryMinting(eventId),
     onSuccess: async (updatedEvent) => {
@@ -30,6 +37,7 @@ function EventDetailsPage() {
   const rules = buildRules(event);
   const totalTickets = event.status === "draft" ? event.tiers.reduce((sum, tier) => sum + tier.quantity, 0) : (event as EventPublished).totalSupply;
   const contractAddress = getContractAddress(event);
+  const mintProgress = getMintProgress(event);
 
   return (
     <div className="flex flex-col gap-6 p-8">
@@ -61,7 +69,7 @@ function EventDetailsPage() {
 
         <Card>
           <CardHeader><CardTitle>Configuração on-chain</CardTitle></CardHeader>
-          <CardContent><dl className="grid gap-4 text-sm"><InfoRow label="Endereço do contrato" value={contractAddress || "Pendente"} mono /><InfoRow label="Total de ingressos" value={String(totalTickets)} /><InfoRow label="Padrão do ingresso" value={publishedValue(event, "tokenStandard", "Pendente")} /><InfoRow label="Código do evento" value={event.id} mono /><InfoRow label="Status do mint" value={statusLabel(event.status)} /><InfoRow label="Consulta local" value={contractAddress ? "Disponível no painel" : "Aguardando contrato"} /><InfoRow label="Consulta Amoy" value={contractAddress && event.status === "minted" ? "Disponível" : "Aguardando mint concluído"} /></dl></CardContent>
+          <CardContent><dl className="grid gap-4 text-sm"><InfoRow label="Endereço do contrato" value={contractAddress || "Pendente"} mono /><InfoRow label="Total de ingressos" value={String(totalTickets)} /><InfoRow label="Ingressos mintados" value={mintProgress ? `${mintProgress.mintedCount}/${mintProgress.totalSupply} (${mintProgress.percent}%)` : "Pendente"} /><InfoRow label="Padrão do ingresso" value={publishedValue(event, "tokenStandard", "Pendente")} /><InfoRow label="Código do evento" value={event.id} mono /><InfoRow label="Status do mint" value={statusLabel(event.status)} /><InfoRow label="Consulta local" value={contractAddress ? "Disponível no painel" : "Aguardando contrato"} /><InfoRow label="Consulta de rede" value={contractAddress && event.status === "minted" ? "Disponível" : "Aguardando mint concluído"} /></dl></CardContent>
         </Card>
       </div>
 
@@ -72,7 +80,7 @@ function EventDetailsPage() {
 
       <Card>
         <CardHeader><CardTitle>Progresso do mint</CardTitle></CardHeader>
-        <CardContent className="flex flex-col gap-3 text-sm"><TimelineItem done title="Evento criado" description="Cadastro do evento concluído." /><TimelineItem done={event.status !== "draft"} title="Configuração on-chain preparada" description="Padrão ERC-721 e regras aplicadas." /><TimelineItem done={event.status === "minted"} title="Ingressos mintados" description={event.status === "mint_failed" ? "Falha durante o mint." : "Ingressos prontos para validação."} /></CardContent>
+        <CardContent className="flex flex-col gap-3 text-sm"><TimelineItem done title="Evento criado" description="Cadastro do evento concluído." /><TimelineItem done={event.status !== "draft"} title="Configuração on-chain preparada" description="Padrão ERC-721 e regras aplicadas." /><MintProgressBar progress={mintProgress} status={event.status} /><TimelineItem done={event.status === "minted"} title="Ingressos mintados" description={event.status === "mint_failed" ? "Falha durante o mint." : "Ingressos prontos para a primary sale."} /></CardContent>
         <CardFooter className="justify-end"><Link to="/events"><Button variant="outline">Voltar à lista</Button></Link></CardFooter>
       </Card>
     </div>
@@ -94,6 +102,11 @@ function getContractAddress(event: Event): string {
   return (event as EventPublished).contractAddress?.trim() ?? "";
 }
 
+function getMintProgress(event: Event): EventPublished["mintProgress"] | null {
+  if (event.status === "draft") return null;
+  return (event as EventPublished).mintProgress;
+}
+
 function statusLabel(status: Event["status"]): string {
   return { draft: "Rascunho", published: "Publicado", minting: "Mint em andamento", minted: "Mint concluído", mint_failed: "Falha no mint" }[status];
 }
@@ -109,6 +122,12 @@ function InfoRow({ label, value, mono }: { label: string; value: string; mono?: 
 
 function TimelineItem({ title, description, done }: { title: string; description: string; done: boolean }) {
   return <div className={cn("rounded-md border p-4", done ? "border-success/40 bg-success/10" : "border-border bg-background")}><p className="font-medium">{title}</p><p className="text-xs text-muted-foreground">{description}</p></div>;
+}
+
+function MintProgressBar({ progress, status }: { progress: EventPublished["mintProgress"] | null; status: Event["status"] }) {
+  if (!progress) return <TimelineItem done={false} title="Mint em andamento" description="Aguardando início do mint." />;
+  const label = status === "mint_failed" ? "Mint pausado por falha" : status === "minted" ? "Mint concluído" : "Mint em andamento";
+  return <div className="rounded-md border border-border bg-background p-4"><div className="flex items-center justify-between gap-4"><p className="font-medium">{label}</p><p className="text-xs text-muted-foreground">{progress.mintedCount}/{progress.totalSupply} · {progress.percent}%</p></div><div className="mt-3 h-2 overflow-hidden rounded-full bg-muted"><div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.min(100, Math.max(0, progress.percent))}%` }} /></div></div>;
 }
 
 export const Route = createFileRoute("/_authed/events/$eventId")({ component: EventDetailsPage });

@@ -19,62 +19,62 @@ As an organizer, I want the platform to automatically create and deploy the tick
 ## Acceptance Criteria
 
 ### Contract Side (M1)
-- [ ] A Solidity contract can be deployed that represents ticket NFTs for an event.
-- [ ] The contract supports minting a specified quantity of tickets per tier.
-- [ ] The factory deploys the event contract with all ticket tier definitions.
-- [ ] `TicketFactory.createEvent` deploys and registers the `TicketNFT`, but does not mint or finalize tickets.
-- [ ] Only a platform orchestrator role can call `TicketFactory.createEvent`.
-- [ ] Factory ownership/admin control can rotate the platform orchestrator role and emits an event when it changes.
-- [ ] `TicketFactory` uses OpenZeppelin `Ownable`, with owner set to the platform admin/deployer.
-- [ ] `TicketFactory` ownership is transferable for platform admin key rotation, but ownership renouncement is disabled.
-- [ ] `TicketFactory` stores both an enumerable list of event contracts and an `eventReference -> TicketNFT address` mapping with uniqueness enforced.
-- [ ] `TicketFactory.createEvent` emits an `EventContractCreated` event with event reference, ticket contract, organizer, tier count, and total configured supply.
-- [ ] `TicketNFT` constructor validates organizer, marketplace, event reference, tier definitions, price cap multiplier, and royalty percentage before deployment succeeds.
-- [ ] The backend mints tickets by calling `mintBatch` separately for each ticket tier.
-- [ ] A ticket tier may be minted across multiple `mintBatch` calls, capped by configured supply.
-- [ ] `mintBatch` enforces a contract-level maximum batch size, while the backend uses a network-specific operational batch size at or below that limit.
-- [ ] All tickets are minted immediately when the event is published.
-- [ ] The contract exposes an irreversible finalized minting state that prevents future minting after all configured tickets are minted.
-- [ ] Only the organizer custodial wallet can finalize minting on-chain.
-- [ ] Finalizing minting reverts unless every ticket tier's minted supply equals its configured supply.
-- [ ] Primary sale transfers are blocked until minting is finalized.
-- [ ] Transfers are restricted to minting, finalized primary sale distribution by the organizer, configured marketplace-operator flows, and authorized validator burns.
-- [ ] Burns are allowed only after minting is finalized.
-- [ ] Validator burns succeed without requiring ERC-721 token approval.
-- [ ] `TicketNFT` includes minimal validator management needed to authorize burn permissions.
-- [ ] Only the organizer custodial wallet can add or remove validators on-chain.
-- [ ] Validator management is allowed before and after finalized minting, but burns are allowed only after finalized minting.
-- [ ] Each minted token references an on-chain ticket tier through `tierId`.
-- [ ] Token IDs are globally sequential within each `TicketNFT` contract.
-- [ ] Each ticket tier stores tier reference, face value, and supply once per tier.
-- [ ] `TicketNFT` implements ERC-721 `tokenURI(tokenId)` using a deployment-time base URI while rich metadata remains off-chain.
-- [ ] The `tokenURI` base URI is immutable after deployment for MVP.
-- [ ] The contract owner (organizer) is set at deployment.
-- [ ] `TicketNFT` uses OpenZeppelin `Ownable`, with owner set to the organizer custodial wallet.
-- [ ] `TicketNFT` ownership transfer and ownership renouncement are disabled for MVP.
-- [ ] `TicketNFT` uses OpenZeppelin Contracts v5 and enforces transfer restrictions by overriding `_update`.
-- [ ] `TicketNFT` implements ERC-2981 royalty support with immutable event-level royalty configuration.
-- [ ] ERC-2981 royalty receiver is the organizer custodial wallet for MVP.
-- [ ] Minted tickets are initially held by the organizer custodial wallet for primary sale distribution.
-- [ ] Minting emits standard ERC-721 `Transfer(address(0), organizer, tokenId)` events per token and a custom batch summary event per `mintBatch` call.
-- [ ] The contract emits events for mint, transfer, and burn operations (for off-chain indexing).
-- [ ] Deployment and minting work on a local Hardhat network.
+- [x] A Solidity contract can be deployed that represents ticket NFTs for an event.
+- [x] The contract supports minting a specified quantity of tickets per tier.
+- [x] The factory deploys the event contract with all ticket tier definitions.
+- [x] `TicketFactory.createEvent` deploys and registers the `TicketNFT`, but does not mint or finalize tickets.
+- [x] Only a platform orchestrator role can call `TicketFactory.createEvent`.
+- [x] Factory ownership/admin control can rotate the platform orchestrator role and emits an event when it changes.
+- [x] `TicketFactory` uses OpenZeppelin `Ownable`, with owner set to the platform admin/deployer.
+- [x] `TicketFactory` ownership is transferable for platform admin key rotation, but ownership renouncement is disabled.
+- [x] `TicketFactory` stores both an enumerable list of event contracts and an `eventReference -> TicketNFT address` mapping with uniqueness enforced.
+- [x] `TicketFactory.createEvent` emits an `EventContractCreated` event with event reference, ticket contract, organizer, tier count, and total configured supply.
+- [x] `TicketNFT` constructor validates organizer, marketplace, event reference, tier definitions, price cap multiplier, and royalty percentage before deployment succeeds.
+- [x] The backend mints tickets by calling `mintBatch` separately for each ticket tier.
+- [x] A ticket tier may be minted across multiple `mintBatch` calls, capped by configured supply.
+- [x] `mintBatch` enforces a contract-level maximum batch size, while the backend uses a network-specific operational batch size at or below that limit.
+- [x] All tickets are minted immediately when the event is published.
+- [x] The contract exposes an irreversible finalized minting state that prevents future minting after all configured tickets are minted.
+- [x] Only the organizer custodial wallet can finalize minting on-chain.
+- [x] Finalizing minting reverts unless every ticket tier's minted supply equals its configured supply.
+- [x] Primary sale transfers are blocked until minting is finalized.
+- [x] Transfers are restricted to minting, finalized primary sale distribution by the organizer, configured marketplace-operator flows, and authorized validator burns.
+- [x] Burns are allowed only after minting is finalized.
+- [x] Validator burns succeed without requiring ERC-721 token approval.
+- [x] `TicketNFT` includes minimal validator management needed to authorize burn permissions.
+- [x] Only the organizer custodial wallet can add or remove validators on-chain.
+- [x] Validator management is allowed before and after finalized minting, but burns are allowed only after finalized minting.
+- [x] Each minted token references an on-chain ticket tier through `tierId`.
+- [x] Token IDs are globally sequential within each `TicketNFT` contract.
+- [x] Each ticket tier stores tier reference, face value, and supply once per tier.
+- [x] `TicketNFT` implements ERC-721 `tokenURI(tokenId)` using a deployment-time base URI while rich metadata remains off-chain.
+- [x] The `tokenURI` base URI is immutable after deployment for MVP.
+- [x] The contract owner (organizer) is set at deployment.
+- [x] `TicketNFT` uses OpenZeppelin `Ownable`, with owner set to the organizer custodial wallet.
+- [x] `TicketNFT` ownership transfer and ownership renouncement are disabled for MVP.
+- [x] `TicketNFT` uses OpenZeppelin Contracts v5 and enforces transfer restrictions by overriding `_update`.
+- [x] `TicketNFT` implements ERC-2981 royalty support with immutable event-level royalty configuration.
+- [x] ERC-2981 royalty receiver is the organizer custodial wallet for MVP.
+- [x] Minted tickets are initially held by the organizer custodial wallet for primary sale distribution.
+- [x] Minting emits standard ERC-721 `Transfer(address(0), organizer, tokenId)` events per token and a custom batch summary event per `mintBatch` call.
+- [x] The contract emits events for mint, transfer, and burn operations (for off-chain indexing).
+- [x] Deployment and minting work on a local Hardhat network.
 - [ ] Deployment and minting work on Polygon Amoy testnet.
-- [ ] Polygon PoS mainnet deployment configuration is documented but not enabled for MVP execution.
+- [x] Polygon PoS mainnet deployment configuration is documented but not enabled for MVP execution.
 
 ### Full Integration (M2)
-- [ ] Submitting an event configuration from F-ORG-01 triggers contract deployment automatically.
-- [ ] The backend orchestrates: deploy contract → mint tier batches → store contract address → return to frontend.
-- [ ] The organizer sees a success state with the deployed contract address and total minted count.
-- [ ] Minting failures (e.g., insufficient gas, network error) leave the event in a not-published minting-incomplete state with a retry option.
-- [ ] The event is not ready for primary sale until every configured ticket tier is fully minted and total minted count equals configured supply.
-- [ ] The backend tracks minting workflow status separately from the contract's finalized minting state.
+- [x] Submitting an event configuration from F-ORG-01 triggers contract deployment automatically.
+- [x] The backend orchestrates: deploy contract → mint tier batches → store contract address → return to frontend.
+- [x] The organizer sees a success state with the deployed contract address and total minted count.
+- [x] Minting failures (e.g., insufficient gas, network error) leave the event in a not-published minting-incomplete state with a retry option.
+- [x] The event is not ready for primary sale until every configured ticket tier is fully minted and total minted count equals configured supply.
+- [x] The backend tracks minting workflow status separately from the contract's finalized minting state.
 - [ ] The minted tickets are visible and ready for primary sale in the marketplace (F-BUY-02).
 
 ### M1 Implementation Boundary
 
-- [ ] M1 includes the contract workspace, deployment scripts, and contract tests only.
-- [ ] Backend integration remains M2 work after the contract ABI and deployment flow are stable.
+- [x] M1 includes the contract workspace, deployment scripts, and contract tests only.
+- [x] Backend integration remains M2 work after the contract ABI and deployment flow are stable.
 
 ## On-Chain / Off-Chain Split
 

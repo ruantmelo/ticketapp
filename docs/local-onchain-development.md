@@ -13,16 +13,18 @@ pnpm install
 pnpm --filter @ticket-chain/contracts build
 ```
 
-## 2. Start the persistent local chain
+## 2. Start Redis and the persistent local chain
 
 In terminal 1:
 
 ```bash
-docker compose up -d anvil
+docker compose up -d redis anvil
 docker compose logs -f anvil
 ```
 
 Copy the private key from the first account printed by Anvil. This key is only for the local development network.
+
+Redis is required by the Minting Engine worker. Anvil is required for real local on-chain deployment and minting.
 
 The Anvil state is persisted under:
 
@@ -81,6 +83,10 @@ pnpm db:seed
 pnpm dev
 ```
 
+`pnpm dev` starts the API, the minting worker, and the Vite frontend. Keep Redis and Anvil running while this command is active.
+
+Run `pnpm db:push` against the active API database whenever the event schema changes. The Minting Engine stores `mint_total` and `mint_count`; an older local database without these columns must be migrated or reset before on-chain minting will work.
+
 Open:
 
 ```text
@@ -100,6 +106,13 @@ Create an event through the organizer panel. When you submit the final step, the
 2. Mint the configured ticket tiers in batches.
 3. Finalize minting.
 4. Store the real local contract address on the event.
+
+Expected validation evidence for the local smoke test:
+
+- the event detail page reaches the `Mintado` / `Mint concluído` state;
+- the event row in SQLite has `status = minted` and a non-empty `contract_address`;
+- the number of rows in `ticket_tokens` for the event equals `total_supply`;
+- `TicketNFT.mintingFinalized()` returns `true` in the Hardhat console.
 
 ## Inspect local contracts
 
@@ -133,13 +146,13 @@ await ticket.read.mintingFinalized()
 Stop while keeping state:
 
 ```bash
-docker compose stop anvil
+docker compose stop anvil redis
 ```
 
 Start again with the same state:
 
 ```bash
-docker compose up -d anvil
+docker compose up -d redis anvil
 ```
 
 Reset the local blockchain completely:
@@ -164,4 +177,4 @@ pnpm db:seed
 - The temporary organizer custodial wallet is the API signer. Per-organizer custodial wallets are still future work.
 - All ticket tiers in an event must share the same price cap and royalty because the current contract enforces an event-level resale rule.
 - `faceValue` is sent on-chain as a positive integer in payment token smallest unit.
-- Existing partially minted and unfinalized contracts attempt `finalizeMinting()` once, then require manual recovery. Full retry semantics remain technical debt for the Minting Engine.
+- Retry is supported for partially minted and unfinalized contracts when the same event configuration and event reference are retried: the backend resolves the existing `TicketNFT`, reads each tier's minted supply, mints only missing batches, and finalizes minting once all configured supply is minted.

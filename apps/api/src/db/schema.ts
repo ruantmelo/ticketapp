@@ -29,6 +29,8 @@ export const events = sqliteTable("events", {
   contractAddress: text("contract_address"),
   tokenStandard: text("token_standard", { enum: ["ERC-721"] }),
   totalSupply: integer("total_supply"),
+  mintTotal: integer("mint_total"),
+  mintCount: integer("mint_count"),
   avgResaleCapPct: integer("avg_resale_cap_pct"),
   avgRoyaltyPct: integer("avg_royalty_pct"),
   mintJobId: text("mint_job_id"),

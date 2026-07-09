@@ -30,6 +30,7 @@ export type MintedTokenMetadata = {
 
 type MintingHooks = {
   onContractResolved?: (result: MintingResult) => void | Promise<void>;
+  onProgress?: (mintedCount: number, totalSupply: number) => void | Promise<void>;
 };
 
 type MintableEvent = {
@@ -60,6 +61,7 @@ export async function deployAndMint(event: MintableEvent, hooks: MintingHooks = 
   if (!env.onchainMintingEnabled) {
     const result = mockMint(event);
     await hooks.onContractResolved?.(result);
+    await hooks.onProgress?.(result.totalSupply, result.totalSupply);
     return result;
   }
 
@@ -163,8 +165,12 @@ export async function deployAndMint(event: MintableEvent, hooks: MintingHooks = 
     return resolvedContract;
   }
 
+  let mintedCount = 0;
   for (const tier of tiers) {
-    await mintTierChunks(publicClient, walletClient, ticketNftAbi, contractAddress, tier);
+    mintedCount += await mintTierChunks(publicClient, walletClient, ticketNftAbi, contractAddress, tier, async (tierMintedCount) => {
+      await hooks.onProgress?.(mintedCount + tierMintedCount, totalSupply);
+    });
+    await hooks.onProgress?.(mintedCount, totalSupply);
   }
 
   await finalizeMinting(publicClient, walletClient, ticketNftAbi, contractAddress);
@@ -306,7 +312,8 @@ async function mintTierChunks(
   abi: Abi,
   contractAddress: Address,
   tier: NormalizedTier,
-): Promise<void> {
+  onTierProgress?: (mintedCount: number) => void | Promise<void>,
+): Promise<number> {
   const mintedSupply = (await publicClient.readContract({
     address: contractAddress,
     abi,
@@ -318,8 +325,11 @@ async function mintTierChunks(
     throw new Error(`Tier ${tier.id} minted supply is inconsistent with configured supply`);
   }
 
-  for (let minted = alreadyMinted; minted < tier.quantity; minted += 100) {
-    const quantity = Math.min(100, tier.quantity - minted);
+  let mintedCount = alreadyMinted;
+  if (mintedCount > 0) await onTierProgress?.(mintedCount);
+
+  while (mintedCount < tier.quantity) {
+    const quantity = Math.min(100, tier.quantity - mintedCount);
     const { request } = await publicClient.simulateContract({
       account: walletClient.account,
       address: contractAddress,
@@ -330,7 +340,11 @@ async function mintTierChunks(
     const hash = await walletClient.writeContract(request);
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
     if (receipt.status !== "success") throw new Error("mintBatch transaction failed");
+    mintedCount += quantity;
+    await onTierProgress?.(mintedCount);
   }
+
+  return mintedCount;
 }
 
 async function finalizeMinting(

@@ -32,6 +32,11 @@ export function toEvent(row: EventRow, tiers: TicketTierRow[]): Event {
     contractAddress: row.contractAddress ?? "",
     tokenStandard: row.tokenStandard ?? "ERC-721",
     totalSupply: row.totalSupply ?? 0,
+    mintProgress: {
+      mintedCount: row.mintCount ?? 0,
+      totalSupply: row.mintTotal ?? row.totalSupply ?? 0,
+      percent: (row.mintTotal ?? row.totalSupply ?? 0) > 0 ? Math.round(((row.mintCount ?? 0) / (row.mintTotal ?? row.totalSupply ?? 1)) * 100) : 0,
+    },
     avgResaleCapPct: row.avgResaleCapPct ?? 0,
     avgRoyaltyPct: row.avgRoyaltyPct ?? 0,
     organizerId: row.organizerId,

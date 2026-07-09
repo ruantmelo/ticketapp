@@ -151,7 +151,7 @@ export async function processMintingJob(input: MintEventJob): Promise<void> {
   }
 
   db.update(events)
-    .set({ status: "minting", mintError: null, updatedAt: new Date() })
+    .set({ status: "minting", mintError: null, mintCount: row.mintCount ?? 0, mintTotal: row.mintTotal ?? row.totalSupply ?? 0, updatedAt: new Date() })
     .where(eq(events.id, input.eventId))
     .run();
 
@@ -159,7 +159,10 @@ export async function processMintingJob(input: MintEventJob): Promise<void> {
   try {
     const result = await deployAndMint(
       { id: row.id, title: row.title, organizerId: row.organizerId, tiers: tiers.map(toTier) },
-      { onContractResolved: (resolved) => persistResolvedContract(row.id, resolved) },
+      {
+        onContractResolved: (resolved) => persistResolvedContract(row.id, resolved),
+        onProgress: (mintedCount, totalSupply) => persistMintProgress(row.id, mintedCount, totalSupply),
+      },
     );
     const now = new Date();
     markEventMintedAndIndexTokens(input.eventId, tiers, result, now);
@@ -181,6 +184,7 @@ function persistResolvedContract(eventId: string, result: Awaited<ReturnType<typ
       totalSupply: result.totalSupply,
       avgResaleCapPct: result.avgResaleCapPct,
       avgRoyaltyPct: result.avgRoyaltyPct,
+      mintTotal: result.totalSupply,
       updatedAt: new Date(),
     })
     .where(eq(events.id, eventId))
@@ -214,6 +218,8 @@ function markEventMintedAndIndexTokens(
         contractAddress: result.contractAddress,
         tokenStandard: result.tokenStandard,
         totalSupply: result.totalSupply,
+        mintTotal: result.totalSupply,
+        mintCount: result.totalSupply,
         avgResaleCapPct: result.avgResaleCapPct,
         avgRoyaltyPct: result.avgRoyaltyPct,
         mintError: null,
@@ -222,4 +228,11 @@ function markEventMintedAndIndexTokens(
       .where(eq(events.id, eventId))
       .run();
   });
+}
+
+function persistMintProgress(eventId: string, mintedCount: number, totalSupply: number): void {
+  db.update(events)
+    .set({ mintCount: mintedCount, mintTotal: totalSupply, updatedAt: new Date() })
+    .where(eq(events.id, eventId))
+    .run();
 }
