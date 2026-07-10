@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Link, useLocation } from "@tanstack/react-router";
-import { Calendar, FileText, PlusCircle, Settings, Store, Ticket } from "lucide-react";
+import { Link, useLocation, useNavigate } from "@tanstack/react-router";
+import { Calendar, FileText, LogOut, PlusCircle, Settings, Store, Ticket } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
@@ -46,8 +46,14 @@ const ACCOUNT_ITEMS: NavItem[] = [
 ];
 
 export function Sidebar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const isBuyer = user?.role === "buyer";
+
+  async function handleLogout() {
+    await logout();
+    await navigate({ to: "/login" });
+  }
 
   return (
     <aside className="flex h-full w-[280px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
@@ -80,6 +86,14 @@ export function Sidebar() {
           {ACCOUNT_ITEMS.map((item) => (
             <SidebarLink key={item.to} item={item} />
           ))}
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex items-center gap-3 border-l-2 border-transparent px-3 py-3 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent/50"
+          >
+            <LogOut className="h-4 w-4" />
+            Sair
+          </button>
         </SidebarSection>
       </nav>
     </aside>

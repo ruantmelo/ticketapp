@@ -17,3 +17,14 @@ services:
     command:
       - if [ -f /data/anvil-state.json ]; then anvil --host 0.0.0.0 --port 8545 --chain-id 31337 --load-state /data/anvil-state.json --dump-state /data/anvil-state.json --mnemonic "test test test test test test test test test test test junk"; else anvil --host 0.0.0.0 --port 8545 --chain-id 31337 --dump-state /data/anvil-state.json --mnemonic "test test test test test test test test test test test junk"; fi
     restart: unless-stopped
+
+  otterscan:
+    image: otterscan/otterscan:latest
+    container_name: ticketapp-otterscan
+    ports:
+      - "5100:80"
+    environment:
+      ERIGON_URL: http://localhost:8545
+    depends_on:
+      - anvil
+    restart: unless-stopped
