@@ -194,7 +194,5 @@ The `docs/` folder is the source of truth for domain language, architecture deci
 
 ## Team
 
-| Name | Email |
-|------|-------|
-| Vinícius Neitzke | [vcn0510@gmail.com](mailto:vcn0510@gmail.com) |
-| Ruan Tenório | [ruantmelo@gmail.com](mailto:ruantmelo@gmail.com) |
+- [Vinícius Neitzke](https://github.com/Neiwone) |
+- [Ruan Tenório](https://github.com/ruantmelo) |
