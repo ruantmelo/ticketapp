@@ -10,10 +10,13 @@ import { eventRoutes } from "./events/routes.js";
 import { marketplaceRoutes } from "./marketplace/routes.js";
 import { metadataRoutes } from "./metadata/routes.js";
 import { uploadRoutes } from "./uploads/routes.js";
+import { validationRoutes } from "./validation/routes.js";
 import { bullBoardRoutes } from "./admin/bull-board.js";
 import { closeMintingQueue } from "./services/minting.queue.js";
+import { validateLocalCustodyConfig } from "./services/custodial-wallet.service.js";
 
 export async function buildServer() {
+  validateLocalCustodyConfig();
   const app = Fastify({
     logger: env.nodeEnv === "development",
     bodyLimit: 8 * 1024 * 1024,
@@ -35,6 +38,7 @@ export async function buildServer() {
   await app.register(metadataRoutes, { prefix: "" });
   await app.register(eventRoutes, { prefix: "" });
   await app.register(marketplaceRoutes, { prefix: "" });
+  await app.register(validationRoutes, { prefix: "" });
   await app.register(uploadRoutes, { prefix: "" });
 
   app.addHook("onClose", async () => {

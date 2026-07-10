@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "TicketChain Validador",
+    "slug": "ticket-chain-scanner",
+    "scheme": "ticketchain-scanner",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "O TicketChain precisa da câmera para validar os ingressos no acesso."
+        }
+      ]
+    ],
+    "ios": {
+      "bundleIdentifier": "com.ticketchain.scanner"
+    },
+    "android": {
+      "package": "com.ticketchain.scanner"
+    }
+  }
+}

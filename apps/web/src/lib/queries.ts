@@ -49,3 +49,10 @@ export const ticketDetailQuery = (ticketId: string) =>
     queryFn: () => api.getTicket(ticketId),
     enabled: !!ticketId,
   });
+
+export const ticketQrContextQuery = (ticketId: string) =>
+  queryOptions({
+    queryKey: ["tickets", ticketId, "qr-context"],
+    queryFn: () => api.getTicketQrContext(ticketId),
+    enabled: !!ticketId,
+  });

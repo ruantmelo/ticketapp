@@ -1,14 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { db } from "./db/client.js";
-import { users } from "./db/schema.js";
+import { users, type UserRole } from "./db/schema.js";
 import { hashPassword } from "./auth/crypto.js";
+import { createCustodialWalletForUser } from "./services/custodial-wallet.service.js";
 
 interface SeedUser {
   name: string;
   email: string;
   password: string;
-  role: "organizer";
+  role: UserRole;
 }
 
 const SEED_USERS: SeedUser[] = [
@@ -16,6 +17,8 @@ const SEED_USERS: SeedUser[] = [
   { name: "Produtora Cultural", email: "produtora@ticketapp.com", password: "produtora123", role: "organizer" },
   { name: "João Organizador", email: "joao@ticketapp.com", password: "joao12345", role: "organizer" },
   { name: "Maria Produtora", email: "maria@ticketapp.com", password: "maria12345", role: "organizer" },
+  { name: "Alice Compradora", email: "alice@ticketapp.com", password: "alice12345", role: "buyer" },
+  { name: "Validador Demo", email: "validador@ticketapp.com", password: "validador123", role: "validator" },
 ];
 
 async function seed(): Promise<void> {
@@ -41,6 +44,7 @@ async function seed(): Promise<void> {
         createdAt: new Date(),
       })
       .run();
+    if (seedUser.role === "buyer") await createCustodialWalletForUser(id);
     inserted++;
   }
 

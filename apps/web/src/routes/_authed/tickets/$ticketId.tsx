@@ -2,17 +2,17 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import QRCode from "qrcode";
+import { privateKeyToAccount } from "viem/accounts";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { api } from "@/lib/api";
-import { ticketDetailQuery } from "@/lib/queries";
+import { ticketDetailQuery, ticketQrContextQuery } from "@/lib/queries";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { TicketStatusBadge } from "@/components/buyer/ticket-status-badge";
-
-const ROTATION_SECONDS = 10;
+import { DYNAMIC_QR_ROTATION_SECONDS, buildDynamicQrTypedData, getDynamicQrWindowIndex, isDynamicQrWindowAccepted, serializeDynamicQrPayload } from "@ticket-chain/shared";
 
 function TicketDetailPage() {
   const { ticketId } = Route.useParams();
@@ -60,7 +60,7 @@ function TicketDetailPage() {
         <Card>
           <CardHeader><CardTitle>Ingresso digital</CardTitle></CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
-            <RotatingQrCode tokenId={ticket.tokenId} disabled={ticket.status !== "valid"} />
+            <RotatingQrCode ticketId={ticketId} ticketStatus={ticket.status} />
             <p className="text-xs text-muted-foreground">Setor {ticket.tierName} · Token {ticket.tokenId}</p>
             {ticket.status !== "valid" && (
               <p className="text-xs text-warning-foreground">
@@ -114,23 +114,62 @@ function TicketDetailPage() {
   );
 }
 
-function RotatingQrCode({ tokenId, disabled }: { tokenId: string; disabled?: boolean }) {
+function RotatingQrCode({ ticketId, ticketStatus }: { ticketId: string; ticketStatus: string }) {
+  const { data: qrContext, error: qrContextError } = useQuery(ticketQrContextQuery(ticketId));
+  const [bootstrap, setBootstrap] = React.useState<{ address: string; privateKey: `0x${string}`; provider: string } | null>(null);
+  const [bootstrapError, setBootstrapError] = React.useState<string | null>(null);
   const [dataUrl, setDataUrl] = React.useState<string | null>(null);
-  const [secondsLeft, setSecondsLeft] = React.useState(ROTATION_SECONDS);
+  const [secondsLeft, setSecondsLeft] = React.useState<number>(DYNAMIC_QR_ROTATION_SECONDS);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    if (disabled) return;
+    let cancelled = false;
+    void api.getDevWalletBootstrap().then((data) => {
+      if (!cancelled) { setBootstrap(data); setBootstrapError(null); }
+    }).catch((err) => {
+      if (!cancelled) {
+        setBootstrap(null);
+        const msg = err && typeof err === "object" && "message" in err ? String(err.message) : "Bootstrap indisponível";
+        setBootstrapError(msg);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (ticketStatus !== "valid" || !qrContext || qrContext.status !== "owned") return;
+    const context = qrContext;
 
     let cancelled = false;
+    let account: ReturnType<typeof privateKeyToAccount> | null = null;
 
     async function render() {
-      const now = Date.now();
-      const window = Math.floor(now / (ROTATION_SECONDS * 1000));
-      const payload = `ticket:${tokenId}:${window}`;
+      if (!bootstrap) return;
+      account ??= privateKeyToAccount(bootstrap.privateKey);
+      if (account.address.toLowerCase() !== context.ownerAddress.toLowerCase()) {
+        if (!cancelled) setError("Carteira divergente do titular do ingresso.");
+        return;
+      }
+      const windowIndex = getDynamicQrWindowIndex();
+      if (!isDynamicQrWindowAccepted(windowIndex)) return;
+      const typedData = buildDynamicQrTypedData({
+        version: context.version,
+        chainId: context.chainId,
+        contractAddress: context.contractAddress as `0x${string}`,
+        tokenId: context.tokenId,
+        windowIndex,
+      });
+      const signature = await account.signTypedData(typedData);
+      const payload = serializeDynamicQrPayload({ ...typedData.message, signature });
       const url = await QRCode.toDataURL(payload, { margin: 1, width: 240 });
-      if (!cancelled) setDataUrl(url);
-      const elapsed = Math.floor((now / 1000) % ROTATION_SECONDS);
-      setSecondsLeft(ROTATION_SECONDS - elapsed);
+      if (!cancelled) {
+        setDataUrl(url);
+        setError(null);
+      }
+      const elapsed = Math.floor((Date.now() / 1000) % DYNAMIC_QR_ROTATION_SECONDS);
+      setSecondsLeft(DYNAMIC_QR_ROTATION_SECONDS - elapsed);
     }
 
     render();
@@ -139,14 +178,27 @@ function RotatingQrCode({ tokenId, disabled }: { tokenId: string; disabled?: boo
       cancelled = true;
       clearInterval(interval);
     };
-  }, [tokenId, disabled]);
+  }, [ticketStatus, qrContext, bootstrap]);
 
-  if (disabled) {
+  if (ticketStatus !== "valid" || (qrContext && qrContext.status !== "owned")) {
     return (
       <div className="flex h-60 w-60 items-center justify-center border border-border bg-muted/30 text-center text-sm text-muted-foreground">
         QR indisponível
       </div>
     );
+  }
+
+  if (qrContextError) {
+    const msg = qrContextError && typeof qrContextError === "object" && "message" in qrContextError ? String(qrContextError.message) : "QR indisponível";
+    return <div className="flex h-60 w-60 items-center justify-center border border-border bg-muted/30 text-center text-sm text-destructive">{msg}</div>;
+  }
+
+  if (!bootstrap) {
+    return <div className="flex h-60 w-60 items-center justify-center border border-border bg-muted/30 text-center text-sm text-muted-foreground">{bootstrapError ?? "QR indisponível no provider local-dev"}</div>;
+  }
+
+  if (error) {
+    return <div className="flex h-60 w-60 items-center justify-center border border-border bg-muted/30 text-center text-sm text-destructive">{error}</div>;
   }
 
   return (
@@ -158,7 +210,7 @@ function RotatingQrCode({ tokenId, disabled }: { tokenId: string; disabled?: boo
         <div className="h-1.5 w-60 overflow-hidden bg-muted">
           <div
             className="h-full bg-primary transition-all"
-            style={{ width: `${(secondsLeft / ROTATION_SECONDS) * 100}%` }}
+            style={{ width: `${(secondsLeft / DYNAMIC_QR_ROTATION_SECONDS) * 100}%` }}
           />
         </div>
         <p className="text-center text-xs text-muted-foreground">Atualiza em {secondsLeft}s</p>

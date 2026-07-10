@@ -152,6 +152,8 @@ export async function deployAndMint(event: MintableEvent, hooks: MintingHooks = 
     tiers,
   });
 
+  await ensureValidatorRelayerAuthorized(publicClient, walletClient, ticketNftAbi, contractAddress);
+
   const resolvedContract = buildResult(event.id, contractAddress, totalSupply, resaleCapPct, royaltyPct, organizer);
   await hooks.onContractResolved?.(resolvedContract);
 
@@ -296,6 +298,36 @@ async function readOptionalBaseTokenUri(
     if (!isMissingBaseTokenUriGetterError(error)) throw error;
     return null;
   }
+}
+
+async function ensureValidatorRelayerAuthorized(
+  publicClient: ReturnType<typeof createPublicClient>,
+  walletClient: ReturnType<typeof createWalletClient>,
+  abi: Abi,
+  contractAddress: Address,
+): Promise<void> {
+  const relayerPrivateKey = env.validatorRelayerPrivateKey ?? (env.nodeEnv !== "production" ? env.chainPrivateKey : undefined);
+  if (!relayerPrivateKey) return;
+
+  const relayer = privateKeyToAccount(relayerPrivateKey as `0x${string}`).address;
+  const authorized = await publicClient.readContract({
+    address: contractAddress,
+    abi,
+    functionName: "validators",
+    args: [relayer],
+  }) as boolean;
+  if (authorized) return;
+
+  const { request } = await publicClient.simulateContract({
+    account: walletClient.account,
+    address: contractAddress,
+    abi,
+    functionName: "addValidator",
+    args: [relayer],
+  });
+  const hash = await walletClient.writeContract(request);
+  const receipt = await publicClient.waitForTransactionReceipt({ hash });
+  if (receipt.status !== "success") throw new Error("addValidator transaction failed");
 }
 
 function isMissingBaseTokenUriGetterError(error: unknown): boolean {

@@ -16,6 +16,7 @@ beforeEach(() => {
   process.env.JWT_SECRET = "test-secret";
   process.env.REDIS_URL = "redis://127.0.0.1:6379";
   process.env.ONCHAIN_MINTING_ENABLED = "false";
+  process.env.BULL_BOARD_ENABLED = "false";
   createSchema(databaseUrl);
 });
 
@@ -79,6 +80,7 @@ describe("minting retry route", () => {
       enqueueMintingJob: vi.fn(async () => "queued-job"),
       retryMintingJob: vi.fn(async () => "retry-job"),
       processMintingJob: vi.fn(async () => undefined),
+      createMintingQueueForInspection: vi.fn(() => ({ name: "minting", client: Promise.resolve({}), on: vi.fn() })),
       closeMintingQueue: vi.fn(async () => undefined),
     }));
 
@@ -326,9 +328,47 @@ function createSchema(databaseUrl: string): void {
       token_id INTEGER NOT NULL,
       tier_id TEXT NOT NULL REFERENCES ticket_tiers(id) ON DELETE CASCADE,
       on_chain_tier_id INTEGER NOT NULL,
+      owner_user_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+      status TEXT NOT NULL DEFAULT 'available',
       created_at INTEGER NOT NULL DEFAULT 0
     );
     CREATE UNIQUE INDEX ticket_tokens_event_token_unique ON ticket_tokens(event_id, token_id);
+    CREATE TABLE custodial_wallets (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+      provider TEXT NOT NULL,
+      provider_wallet_id TEXT NOT NULL,
+      address TEXT NOT NULL,
+      encrypted_private_key TEXT NOT NULL,
+      encryption_nonce TEXT NOT NULL,
+      encryption_tag TEXT NOT NULL,
+      key_version INTEGER NOT NULL DEFAULT 1,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE TABLE listings (
+      id TEXT PRIMARY KEY,
+      ticket_token_id TEXT NOT NULL REFERENCES ticket_tokens(id) ON DELETE CASCADE,
+      seller_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      price_reais INTEGER NOT NULL,
+      on_chain_listing_id INTEGER,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE TABLE ticket_validations (
+      id TEXT PRIMARY KEY,
+      event_id TEXT NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+      ticket_token_id TEXT NOT NULL REFERENCES ticket_tokens(id) ON DELETE CASCADE,
+      contract_address TEXT NOT NULL,
+      token_id INTEGER NOT NULL,
+      scanner_user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      status TEXT NOT NULL DEFAULT 'pending_burn',
+      tx_hash TEXT,
+      error TEXT,
+      created_at INTEGER NOT NULL DEFAULT 0,
+      confirmed_at INTEGER
+    );
+    CREATE UNIQUE INDEX ticket_validations_ticket_token_unique ON ticket_validations(ticket_token_id);
   `);
   sqlite.close();
 }

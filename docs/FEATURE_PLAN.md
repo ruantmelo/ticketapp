@@ -45,7 +45,7 @@ F-ORG-02 has local Hardhat + API + frontend minting validated, with Amoy smoke d
 
 | ID | Feature | Priority | Milestone | Status | Spec |
 |----|---------|----------|-----------|--------|------|
-| F-VAL-01 | Scanner App | High | M4 | Not Started | [spec](features/validator/F-VAL-01-scanner-app.md) |
+| F-VAL-01 | Scanner App | High | M4 | In Progress | [spec](features/validator/F-VAL-01-scanner-app.md) |
 | F-VAL-02 | Offline Mode / Cache | Medium | M4 | Not Started | [spec](features/validator/F-VAL-02-offline-cache.md) |
 
 ## Summary
@@ -56,9 +56,9 @@ F-ORG-02 has local Hardhat + API + frontend minting validated, with Amoy smoke d
 | High priority | 7 |
 | Medium priority | 3 |
 | Done | 0 |
-| In Progress | 7 |
+| In Progress | 8 |
 | Blocked | 0 |
-| Not Started | 3 |
+| Not Started | 2 |
 
 ## Blocked Items
 

@@ -12,6 +12,22 @@ export const users = sqliteTable("users", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 });
 
+export const custodialWalletStatuses = ["active", "disabled"] as const;
+
+export const custodialWallets = sqliteTable("custodial_wallets", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  provider: text("provider").notNull(),
+  providerWalletId: text("provider_wallet_id").notNull(),
+  address: text("address").notNull(),
+  encryptedPrivateKey: text("encrypted_private_key").notNull(),
+  encryptionNonce: text("encryption_nonce").notNull(),
+  encryptionTag: text("encryption_tag").notNull(),
+  keyVersion: integer("key_version").notNull().default(1),
+  status: text("status", { enum: custodialWalletStatuses }).notNull().default("active"),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
+});
+
 export const events = sqliteTable("events", {
   id: text("id").primaryKey(),
   organizerId: text("organizer_id")
@@ -52,7 +68,7 @@ export const ticketTiers = sqliteTable("ticket_tiers", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 });
 
-export const ticketTokenStatuses = ["available", "owned", "listed", "burned"] as const;
+export const ticketTokenStatuses = ["available", "owned", "listed", "pending_burn", "burned"] as const;
 
 export const ticketTokens = sqliteTable("ticket_tokens", {
   id: text("id").primaryKey(),
@@ -69,6 +85,28 @@ export const ticketTokens = sqliteTable("ticket_tokens", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 }, (table) => ({
   eventTokenUnique: uniqueIndex("ticket_tokens_event_token_unique").on(table.eventId, table.tokenId),
+}));
+
+export const validationStatuses = ["pending_burn", "burned", "burn_failed", "duplicate"] as const;
+
+export const ticketValidations = sqliteTable("ticket_validations", {
+  id: text("id").primaryKey(),
+  eventId: text("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  ticketTokenId: text("ticket_token_id")
+    .notNull()
+    .references(() => ticketTokens.id, { onDelete: "cascade" }),
+  contractAddress: text("contract_address").notNull(),
+  tokenId: integer("token_id").notNull(),
+  scannerUserId: text("scanner_user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  status: text("status", { enum: validationStatuses }).notNull().default("pending_burn"),
+  txHash: text("tx_hash"),
+  error: text("error"),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
+  confirmedAt: integer("confirmed_at", { mode: "timestamp_ms" }),
+}, (table) => ({
+  ticketTokenUnique: uniqueIndex("ticket_validations_ticket_token_unique").on(table.ticketTokenId),
 }));
 
 export const listingStatuses = ["active", "sold", "cancelled"] as const;
@@ -110,9 +148,12 @@ export const listingsRelations = relations(listings, ({ one }) => ({
 
 export type UserRow = typeof users.$inferSelect;
 export type UserRole = (typeof userRoles)[number];
+export type CustodialWalletRow = typeof custodialWallets.$inferSelect;
 export type EventRow = typeof events.$inferSelect;
 export type TicketTierRow = typeof ticketTiers.$inferSelect;
 export type TicketTokenRow = typeof ticketTokens.$inferSelect;
 export type TicketTokenStatus = (typeof ticketTokenStatuses)[number];
+export type TicketValidationRow = typeof ticketValidations.$inferSelect;
+export type TicketValidationStatus = (typeof validationStatuses)[number];
 export type ListingRow = typeof listings.$inferSelect;
 export type ListingStatus = (typeof listingStatuses)[number];

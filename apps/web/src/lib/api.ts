@@ -1,6 +1,7 @@
 import type {
   ApiError,
   AuthSession,
+  DynamicQrContext,
   Event,
   EventInput,
   EventListItem,
@@ -13,10 +14,15 @@ async function request<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  const headers = new Headers(init?.headers);
+  if (init?.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",
-    headers: { "Content-Type": "application/json", ...init?.headers },
     ...init,
+    headers,
   });
   const body = await res.json().catch(() => null);
   if (!res.ok) {
@@ -54,6 +60,8 @@ export const api = {
 
   listMyTickets: () => request<{ items: OwnedTicket[] }>("/tickets"),
   getTicket: (ticketId: string) => request<OwnedTicket>(`/tickets/${ticketId}`),
+  getTicketQrContext: (ticketId: string) => request<DynamicQrContext>(`/tickets/${ticketId}/qr-context`),
+  getDevWalletBootstrap: () => request<{ address: string; privateKey: `0x${string}`; provider: "local-dev" }>("/wallet/dev-bootstrap", { method: "POST" }),
   createResaleListing: (ticketId: string, price: number) =>
     request<OwnedTicket>(`/tickets/${ticketId}/listings`, { method: "POST", body: JSON.stringify({ price }) }),
   cancelResaleListing: (ticketId: string) =>

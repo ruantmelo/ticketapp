@@ -8,11 +8,8 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { env } from "../config.js";
 import { TICKETING_CHAIN, loadArtifactAbi } from "./minting.service.js";
+import { getCustodialWalletAccount } from "./custodial-wallet.service.js";
 
-// Dev-only stopgap (ADR 0007 is still Proposed): a single shared "custodial"
-// wallet stands in for every buyer's wallet until real per-user custodial
-// wallets exist. See docs/features/buyer/F-BUY-01-web2-onboarding.md.
-//
 // Ticket prices (like `faceValue` in minting.service.ts) are passed on-chain
 // as plain integers already denominated in the payment token's smallest unit
 // — there is no separate reais-to-base-unit conversion here, matching the
@@ -30,22 +27,13 @@ function organizerWalletClient() {
   return { account, client: createWalletClient({ account, chain: TICKETING_CHAIN, transport: http(env.chainRpcUrl) }) };
 }
 
-function buyerCustodialWalletClient() {
-  const account = privateKeyToAccount(env.buyerCustodialPrivateKey as `0x${string}`);
-  return { account, client: createWalletClient({ account, chain: TICKETING_CHAIN, transport: http(env.chainRpcUrl) }) };
-}
-
-export function buyerCustodialAddress(): Address {
-  return privateKeyToAccount(env.buyerCustodialPrivateKey as `0x${string}`).address;
-}
-
-export async function transferPrimarySale(ticketContractAddress: string, tokenId: number): Promise<void> {
+export async function transferPrimarySale(ticketContractAddress: string, tokenId: number, buyerUserId: string): Promise<void> {
   if (!env.onchainMintingEnabled) return;
 
   const nftAbi = loadArtifactAbi("TicketNFT");
   const { account, client: walletClient } = organizerWalletClient();
   const contractAddress = getAddress(ticketContractAddress);
-  const buyer = buyerCustodialAddress();
+  const buyerAccount = await getCustodialWalletAccount(buyerUserId);
   const client = publicClient();
 
   const { request } = await client.simulateContract({
@@ -53,19 +41,19 @@ export async function transferPrimarySale(ticketContractAddress: string, tokenId
     address: contractAddress,
     abi: nftAbi,
     functionName: "transferFrom",
-    args: [account.address, buyer, BigInt(tokenId)],
+    args: [account.address, buyerAccount.account.address, BigInt(tokenId)],
   });
   const hash = await walletClient.writeContract(request);
   const receipt = await client.waitForTransactionReceipt({ hash });
   if (receipt.status !== "success") throw new Error("Primary sale transfer failed");
 }
 
-export async function listOnChain(ticketContractAddress: string, tokenId: number, priceReais: number): Promise<number | null> {
+export async function listOnChain(ticketContractAddress: string, tokenId: number, priceReais: number, sellerUserId: string): Promise<number | null> {
   if (!env.onchainMintingEnabled) return null;
 
   const nftAbi = loadArtifactAbi("TicketNFT");
   const marketplaceAbi = loadArtifactAbi("TicketMarketplace");
-  const { account, client: walletClient } = buyerCustodialWalletClient();
+  const { account, client: walletClient } = await getCustodialWalletAccount(sellerUserId);
   const contractAddress = getAddress(ticketContractAddress);
   const marketplaceAddress = getAddress(env.ticketMarketplaceAddress);
   const client = publicClient();
@@ -101,18 +89,18 @@ export async function listOnChain(ticketContractAddress: string, tokenId: number
   return Number(result as bigint);
 }
 
-export async function buyListingOnChain(onChainListingId: number, priceReais: number): Promise<void> {
+export async function buyListingOnChain(onChainListingId: number, priceReais: number, buyerUserId: string): Promise<void> {
   if (!env.onchainMintingEnabled) return;
 
   const marketplaceAbi = loadArtifactAbi("TicketMarketplace");
   const erc20Abi = loadArtifactAbi("MockUSDC");
-  const { account, client: walletClient } = buyerCustodialWalletClient();
+  const { account, client: walletClient } = await getCustodialWalletAccount(buyerUserId);
   const marketplaceAddress = getAddress(env.ticketMarketplaceAddress);
   const paymentTokenAddress = getAddress(env.paymentTokenAddress);
   const client = publicClient();
   const priceBaseUnits = toBaseUnits(priceReais);
 
-  await ensureBuyerCustodialFunded(paymentTokenAddress, account.address, priceBaseUnits);
+  await ensureBuyerCustodialFunded(paymentTokenAddress, account.address, priceBaseUnits, buyerUserId);
 
   const allowance = (await client.readContract({
     address: paymentTokenAddress,
@@ -144,11 +132,11 @@ export async function buyListingOnChain(onChainListingId: number, priceReais: nu
   if (receipt.status !== "success") throw new Error("Purchase transaction failed");
 }
 
-export async function cancelListingOnChain(onChainListingId: number): Promise<void> {
+export async function cancelListingOnChain(onChainListingId: number, sellerUserId: string): Promise<void> {
   if (!env.onchainMintingEnabled) return;
 
   const marketplaceAbi = loadArtifactAbi("TicketMarketplace");
-  const { account, client: walletClient } = buyerCustodialWalletClient();
+  const { account, client: walletClient } = await getCustodialWalletAccount(sellerUserId);
   const marketplaceAddress = getAddress(env.ticketMarketplaceAddress);
   const client = publicClient();
 
@@ -164,7 +152,7 @@ export async function cancelListingOnChain(onChainListingId: number): Promise<vo
   if (receipt.status !== "success") throw new Error("Cancel listing transaction failed");
 }
 
-async function ensureBuyerCustodialFunded(paymentTokenAddress: Address, buyer: Address, minBalance: bigint): Promise<void> {
+async function ensureBuyerCustodialFunded(paymentTokenAddress: Address, buyer: Address, minBalance: bigint, buyerUserId: string): Promise<void> {
   const client = publicClient();
   const erc20Abi = loadArtifactAbi("MockUSDC");
   const balance = (await client.readContract({
@@ -175,7 +163,7 @@ async function ensureBuyerCustodialFunded(paymentTokenAddress: Address, buyer: A
   })) as bigint;
   if (balance >= minBalance) return;
 
-  const { account, client: walletClient } = buyerCustodialWalletClient();
+  const { account, client: walletClient } = await getCustodialWalletAccount(buyerUserId);
   const topUp = minBalance * 10n;
   const { request } = await client.simulateContract({
     account,

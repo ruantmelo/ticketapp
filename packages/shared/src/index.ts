@@ -1,5 +1,123 @@
 import { z, type ZodError } from "zod";
 
+export const DYNAMIC_QR_VERSION = 1 as const;
+export const DYNAMIC_QR_ROTATION_SECONDS = 10 as const;
+export const DYNAMIC_QR_WINDOW_TOLERANCE = 1 as const;
+
+const dynamicQrContractSchema = z.object({
+  version: z.literal(DYNAMIC_QR_VERSION),
+  chainId: z.number().int().positive(),
+  contractAddress: z.string(),
+  tokenId: z.union([z.number().int().nonnegative(), z.string()]),
+  windowIndex: z.number().int().nonnegative(),
+});
+
+export const dynamicQrPayloadSchema = dynamicQrContractSchema.extend({
+  signature: z.string(),
+});
+
+export const dynamicQrContextSchema = z.object({
+  version: z.literal(DYNAMIC_QR_VERSION),
+  chainId: z.number().int().positive(),
+  contractAddress: z.string(),
+  tokenId: z.number().int().nonnegative(),
+  ownerAddress: z.string(),
+  status: z.enum(["owned", "listed", "burned"]),
+});
+
+export const validationResultCodeSchema = z.enum([
+  "VALID_ACCEPTED",
+  "INVALID_SIGNATURE",
+  "EXPIRED_QR",
+  "NOT_OWNER",
+  "ALREADY_USED",
+  "UNKNOWN_TICKET",
+  "CHAIN_UNAVAILABLE",
+  "INVALID_QR",
+  "FORBIDDEN_EVENT",
+]);
+
+export const validationScanRequestSchema = z.object({
+  payload: z.string().optional(),
+  qrPayload: z.string().optional(),
+}).refine((value) => Boolean(value.payload ?? value.qrPayload), {
+  message: "payload ou qrPayload é obrigatório",
+});
+
+export const validationScanResponseSchema = z.object({
+  status: validationResultCodeSchema,
+  message: z.string(),
+  ticketId: z.string().optional(),
+  eventId: z.string().optional(),
+  txHash: z.string().optional(),
+});
+
+export const validatorEventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  location: z.string(),
+  startsAt: z.string(),
+});
+
+export type DynamicQrPayload = z.infer<typeof dynamicQrPayloadSchema>;
+export type DynamicQrPayloadWithoutSignature = z.infer<typeof dynamicQrContractSchema>;
+export type DynamicQrContext = z.infer<typeof dynamicQrContextSchema>;
+export type ValidationResultCode = z.infer<typeof validationResultCodeSchema>;
+export type ValidationScanRequest = z.infer<typeof validationScanRequestSchema>;
+export type ValidationScanResponse = z.infer<typeof validationScanResponseSchema>;
+export type ValidatorEvent = z.infer<typeof validatorEventSchema>;
+
+export function getDynamicQrWindowIndex(nowMs = Date.now()): number {
+  return Math.floor(nowMs / (DYNAMIC_QR_ROTATION_SECONDS * 1000));
+}
+
+export function buildDynamicQrTypedData(input: Omit<DynamicQrPayloadWithoutSignature, "contractAddress"> & { contractAddress: `0x${string}` }) {
+  return {
+    domain: {
+      name: "TicketChainDynamicQR",
+      version: "1",
+      chainId: input.chainId,
+      verifyingContract: input.contractAddress,
+    },
+    types: {
+      TicketAdmission: [
+        { name: "version", type: "uint256" },
+        { name: "chainId", type: "uint256" },
+        { name: "contractAddress", type: "address" },
+        { name: "tokenId", type: "uint256" },
+        { name: "windowIndex", type: "uint256" },
+      ],
+    },
+    primaryType: "TicketAdmission" as const,
+    message: {
+      version: input.version,
+      chainId: input.chainId,
+      contractAddress: input.contractAddress,
+      tokenId: input.tokenId,
+      windowIndex: input.windowIndex,
+    },
+  };
+}
+
+export function serializeDynamicQrPayload(payload: DynamicQrPayload): string {
+  return JSON.stringify(payload);
+}
+
+export function parseDynamicQrPayload(raw: string): DynamicQrPayload | null {
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    const result = dynamicQrPayloadSchema.safeParse(parsed);
+    return result.success ? result.data : null;
+  } catch {
+    return null;
+  }
+}
+
+export function isDynamicQrWindowAccepted(windowIndex: number, nowMs = Date.now()): boolean {
+  const current = getDynamicQrWindowIndex(nowMs);
+  return Math.abs(current - windowIndex) <= DYNAMIC_QR_WINDOW_TOLERANCE;
+}
+
 export const VALIDATION = {
   artworkMaxBytes: 5 * 1024 * 1024,
   artworkMimeTypes: ["image/png", "image/jpeg"] as const,
@@ -193,7 +311,7 @@ export type EventListItem = z.infer<typeof eventListItemSchema>;
 export type OnChainPreview = z.infer<typeof onChainPreviewSchema>;
 
 export type AuthErrorCode = "INVALID_CREDENTIALS" | "EMAIL_TAKEN" | "UNAUTHORIZED" | "VALIDATION";
-export type ApiErrorCode = AuthErrorCode | "NOT_FOUND" | "FORBIDDEN" | "INTERNAL";
+export type ApiErrorCode = AuthErrorCode | "NOT_FOUND" | "FORBIDDEN" | "INTERNAL" | "WALLET_NOT_READY" | "WALLET_SIGNATURE_UNAVAILABLE" | "INVALID_STATUS" | "CHAIN_ERROR";
 
 export interface ApiError {
   code: ApiErrorCode;

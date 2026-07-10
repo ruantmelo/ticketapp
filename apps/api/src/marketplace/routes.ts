@@ -6,6 +6,9 @@ import { db } from "../db/client.js";
 import { events, listings, ticketTiers, ticketTokens, users, type TicketTierRow, type TicketTokenRow } from "../db/schema.js";
 import { requireAuth } from "../auth/middleware.js";
 import { buyListingOnChain, cancelListingOnChain, listOnChain, transferPrimarySale } from "../services/marketplace.service.js";
+import { env } from "../config.js";
+import { DYNAMIC_QR_VERSION } from "@ticket-chain/shared";
+import { getCustodialWalletAddress } from "../services/custodial-wallet.service.js";
 
 const createListingSchema = z.object({ price: z.number().int().positive() });
 
@@ -67,7 +70,7 @@ function serializeTicket(token: TicketTokenRow) {
     faceValue: tier?.faceValue ?? 0,
     resaleCapPct: tier?.resaleCapPct ?? 0,
     tokenId: String(token.tokenId),
-    status: token.status === "listed" ? "listed" : token.status === "burned" ? "used" : "valid",
+    status: token.status === "listed" ? "listed" : token.status === "burned" || token.status === "pending_burn" ? "used" : "valid",
     listingPrice: activeListing?.priceReais ?? null,
   };
 }
@@ -129,7 +132,7 @@ export async function marketplaceRoutes(app: FastifyInstance): Promise<void> {
     if (!token) return reply.code(409).send({ code: "SOLD_OUT", message: "Ingresso esgotado." });
 
     try {
-      await transferPrimarySale(event.contractAddress, token.tokenId);
+      await transferPrimarySale(event.contractAddress, token.tokenId, buyerId);
     } catch (error) {
       return reply.code(502).send({ code: "CHAIN_ERROR", message: error instanceof Error ? error.message : "Falha na transferência on-chain." });
     }
@@ -153,7 +156,7 @@ export async function marketplaceRoutes(app: FastifyInstance): Promise<void> {
 
     if (listing.onChainListingId != null) {
       try {
-        await buyListingOnChain(listing.onChainListingId, listing.priceReais);
+        await buyListingOnChain(listing.onChainListingId, listing.priceReais, buyerId);
       } catch (error) {
         return reply.code(502).send({ code: "CHAIN_ERROR", message: error instanceof Error ? error.message : "Falha na compra on-chain." });
       }
@@ -178,6 +181,26 @@ export async function marketplaceRoutes(app: FastifyInstance): Promise<void> {
     return reply.send(serializeTicket(token));
   });
 
+  app.get("/tickets/:id/qr-context", async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const userId = request.user!.sub;
+    const token = db.select().from(ticketTokens).where(and(eq(ticketTokens.id, id), eq(ticketTokens.ownerUserId, userId))).get();
+    if (!token) return reply.code(404).send({ code: "NOT_FOUND", message: "Ingresso não encontrado." });
+    if (token.status !== "owned" && token.status !== "listed" && token.status !== "pending_burn" && token.status !== "burned") {
+      return reply.code(400).send({ code: "INVALID_STATUS", message: "Ingresso indisponível para QR." });
+    }
+    const event = db.select().from(events).where(eq(events.id, token.eventId)).get();
+    if (!event?.contractAddress) return reply.code(400).send({ code: "INVALID_STATUS", message: "Ingresso ainda não possui contrato on-chain." });
+    return reply.send({
+      version: DYNAMIC_QR_VERSION,
+      chainId: env.chainId,
+      contractAddress: event.contractAddress,
+      tokenId: token.tokenId,
+      ownerAddress: getCustodialWalletAddress(userId),
+      status: token.status === "pending_burn" ? "burned" : token.status,
+    });
+  });
+
   app.post("/tickets/:id/listings", async (request, reply) => {
     const { id } = request.params as { id: string };
     const userId = request.user!.sub;
@@ -200,7 +223,7 @@ export async function marketplaceRoutes(app: FastifyInstance): Promise<void> {
     let onChainListingId: number | null = null;
     if (event.contractAddress) {
       try {
-        onChainListingId = await listOnChain(event.contractAddress, token.tokenId, parsed.data.price);
+        onChainListingId = await listOnChain(event.contractAddress, token.tokenId, parsed.data.price, userId);
       } catch (error) {
         return reply.code(502).send({ code: "CHAIN_ERROR", message: error instanceof Error ? error.message : "Falha ao anunciar on-chain." });
       }
@@ -226,7 +249,7 @@ export async function marketplaceRoutes(app: FastifyInstance): Promise<void> {
 
     if (listing.onChainListingId != null) {
       try {
-        await cancelListingOnChain(listing.onChainListingId);
+        await cancelListingOnChain(listing.onChainListingId, userId);
       } catch (error) {
         return reply.code(502).send({ code: "CHAIN_ERROR", message: error instanceof Error ? error.message : "Falha ao cancelar on-chain." });
       }

@@ -17,6 +17,10 @@ apps/api/data
 .idea
 .DS_Store
 
+# Expo local state
+.expo
+apps/*/.expo
+
 # Logs
 *.log
 npm-debug.log*
