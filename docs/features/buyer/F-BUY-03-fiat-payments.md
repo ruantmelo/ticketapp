@@ -6,7 +6,7 @@
 | **Persona** | Buyer / Fan |
 | **Milestone** | M5 |
 | **Priority** | Medium |
-| **Status** | Not Started |
+| **Status** | In Progress |
 
 ## Summary
 
@@ -51,6 +51,11 @@ As a buyer, I want to pay for my ticket with Pix or a credit card just like any 
 - **F-BUY-01** (Web2.5 Onboarding) — the buyer must have a custodial wallet to receive the ticket after payment.
 - **F-BUY-02** (Integrated Marketplace) — the checkout flow is part of the marketplace purchase.
 - **F-ORG-02** (Minting Engine) — the tickets being purchased are minted NFTs.
+
+## Implementation Notes
+
+- **UI prototype only** (`apps/web/src/routes/_authed/checkout/$eventId.tsx`): the "Pagamento" step lets the buyer pick Pix or Cartão. Pix shows a static fake QR placeholder and a fake copia-e-cola code; Cartão shows unvalidated fake input fields. Confirming payment calls the real [F-BUY-02](F-BUY-02-marketplace.md) purchase endpoints directly (no payment method is actually sent to or used by the backend) — the ticket transfer/purchase itself is real, but there is no Pix/card charge behind it.
+- No real Pix/card provider, webhook handling, currency conversion, or idempotency logic exists — all open questions below remain unresolved.
 
 ## Open Questions
 

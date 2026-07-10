@@ -52,6 +52,8 @@ export const ticketTiers = sqliteTable("ticket_tiers", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 });
 
+export const ticketTokenStatuses = ["available", "owned", "listed", "burned"] as const;
+
 export const ticketTokens = sqliteTable("ticket_tokens", {
   id: text("id").primaryKey(),
   eventId: text("event_id")
@@ -62,10 +64,28 @@ export const ticketTokens = sqliteTable("ticket_tokens", {
     .notNull()
     .references(() => ticketTiers.id, { onDelete: "cascade" }),
   onChainTierId: integer("on_chain_tier_id").notNull(),
+  ownerUserId: text("owner_user_id").references(() => users.id, { onDelete: "set null" }),
+  status: text("status", { enum: ticketTokenStatuses }).notNull().default("available"),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
 }, (table) => ({
   eventTokenUnique: uniqueIndex("ticket_tokens_event_token_unique").on(table.eventId, table.tokenId),
 }));
+
+export const listingStatuses = ["active", "sold", "cancelled"] as const;
+
+export const listings = sqliteTable("listings", {
+  id: text("id").primaryKey(),
+  ticketTokenId: text("ticket_token_id")
+    .notNull()
+    .references(() => ticketTokens.id, { onDelete: "cascade" }),
+  sellerId: text("seller_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  priceReais: integer("price_reais").notNull(),
+  onChainListingId: integer("on_chain_listing_id"),
+  status: text("status", { enum: listingStatuses }).notNull().default("active"),
+  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull().default(new Date(0)),
+});
 
 export const eventsRelations = relations(events, ({ one, many }) => ({
   organizer: one(users, { fields: [events.organizerId], references: [users.id] }),
@@ -76,9 +96,16 @@ export const ticketTiersRelations = relations(ticketTiers, ({ one }) => ({
   event: one(events, { fields: [ticketTiers.eventId], references: [events.id] }),
 }));
 
-export const ticketTokensRelations = relations(ticketTokens, ({ one }) => ({
+export const ticketTokensRelations = relations(ticketTokens, ({ one, many }) => ({
   event: one(events, { fields: [ticketTokens.eventId], references: [events.id] }),
   tier: one(ticketTiers, { fields: [ticketTokens.tierId], references: [ticketTiers.id] }),
+  owner: one(users, { fields: [ticketTokens.ownerUserId], references: [users.id] }),
+  listings: many(listings),
+}));
+
+export const listingsRelations = relations(listings, ({ one }) => ({
+  ticketToken: one(ticketTokens, { fields: [listings.ticketTokenId], references: [ticketTokens.id] }),
+  seller: one(users, { fields: [listings.sellerId], references: [users.id] }),
 }));
 
 export type UserRow = typeof users.$inferSelect;
@@ -86,3 +113,6 @@ export type UserRole = (typeof userRoles)[number];
 export type EventRow = typeof events.$inferSelect;
 export type TicketTierRow = typeof ticketTiers.$inferSelect;
 export type TicketTokenRow = typeof ticketTokens.$inferSelect;
+export type TicketTokenStatus = (typeof ticketTokenStatuses)[number];
+export type ListingRow = typeof listings.$inferSelect;
+export type ListingStatus = (typeof listingStatuses)[number];

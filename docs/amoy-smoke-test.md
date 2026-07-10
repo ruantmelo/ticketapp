@@ -6,7 +6,7 @@ Use this runbook to validate the F-ORG-02 Minting Engine against Polygon Amoy wi
 
 This smoke test validates that the platform can:
 
-1. deploy `TicketFactory` and the development `MockMarketplace` to Polygon Amoy;
+1. deploy `TicketFactory`, the real `TicketMarketplace`, and a `MockUSDC` payment token to Polygon Amoy;
 2. configure the API to use Amoy through viem;
 3. publish a small organizer event through the frontend;
 4. let the Minting Engine deploy a per-event `TicketNFT`, mint all ticket tiers, and finalize minting;
@@ -25,7 +25,7 @@ Do not use production keys or real customer data. The signer is a temporary deve
 
 ## 1. Deploy F-ORG-02 contracts to Amoy
 
-The current `scripts/deploy.ts` is a smoke deploy script: it deploys `MockMarketplace` and `TicketFactory`, then creates, mints, and finalizes one sample `TicketNFT`. This side effect is intentional for contract-level smoke validation. The API/frontend smoke below must still publish a separate small event through the Minting Engine.
+The current `scripts/deploy.ts` is a smoke deploy script: it deploys `MockUSDC`, `TicketMarketplace`, and `TicketFactory`, then creates, mints, and finalizes one sample `TicketNFT`. This side effect is intentional for contract-level smoke validation. The API/frontend smoke below must still publish a separate small event through the Minting Engine.
 
 From `packages/contracts`:
 
@@ -39,7 +39,8 @@ Record the printed addresses:
 
 ```text
 Factory: 0x...
-MockMarketplace: 0x...
+TicketMarketplace: 0x...
+PaymentToken (MockUSDC): 0x...
 ```
 
 The deployer becomes the factory owner and initial `platformOrchestrator`. The API signer must be the same address for this smoke test unless the factory orchestrator is rotated deliberately.

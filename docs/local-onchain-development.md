@@ -34,7 +34,7 @@ The Anvil state is persisted under:
 
 Stopping and starting the container keeps deployed contracts, balances, events, and transactions as long as this file is kept.
 
-## 3. Deploy the factory and mock marketplace locally
+## 3. Deploy the factory, marketplace, and payment token locally
 
 In terminal 2:
 
@@ -47,7 +47,8 @@ Copy the printed addresses:
 
 ```text
 Factory: 0x...
-MockMarketplace: 0x...
+TicketMarketplace: 0x...
+PaymentToken (MockUSDC): 0x...
 ```
 
 ## 4. Configure the API
@@ -67,11 +68,15 @@ CHAIN_PRIVATE_KEY=0xPRIVATE_KEY_FROM_ANVIL_ACCOUNT
 CHAIN_ID=31337
 TICKET_FACTORY_ADDRESS=0xFACTORY_FROM_DEPLOY_SCRIPT
 TICKET_MARKETPLACE_ADDRESS=0xMARKETPLACE_FROM_DEPLOY_SCRIPT
+PAYMENT_TOKEN_ADDRESS=0xMOCKUSDC_FROM_DEPLOY_SCRIPT
+BUYER_CUSTODIAL_PRIVATE_KEY=0xPRIVATE_KEY_FROM_A_DIFFERENT_ANVIL_ACCOUNT
 TICKET_BASE_URI=http://localhost:4000/metadata/
 AMOY_MAX_SYNC_SUPPLY=1000
 ```
 
 The `CHAIN_PRIVATE_KEY` must belong to the same local account used by the deploy script. That account is both the temporary organizer custodial wallet and the factory `platformOrchestrator` for local testing.
+
+`BUYER_CUSTODIAL_PRIVATE_KEY` must be a **different** Anvil account (e.g. the second account printed by Anvil) — it's a single shared dev-only "custodial" wallet standing in for every buyer's wallet until ADR 0007 is resolved. See [F-BUY-01's implementation notes](features/buyer/F-BUY-01-web2-onboarding.md#implementation-notes).
 
 ## 5. Start the app
 
@@ -175,6 +180,7 @@ pnpm db:seed
 - This local flow does not require faucets or real funds.
 - Anvil state persists in `.local-chain/anvil/anvil-state.json`; deleting that directory resets the blockchain.
 - The temporary organizer custodial wallet is the API signer. Per-organizer custodial wallets are still future work.
+- Buyers share a single dev-only custodial wallet (`BUYER_CUSTODIAL_PRIVATE_KEY`) the same way — real per-user custodial wallets (ADR 0007) are still future work. The app database tracks per-user ticket ownership; on-chain, all buyer-owned tokens sit under one address.
 - All ticket tiers in an event must share the same price cap and royalty because the current contract enforces an event-level resale rule.
 - `faceValue` is sent on-chain as a positive integer in payment token smallest unit.
 - Retry is supported for partially minted and unfinalized contracts when the same event configuration and event reference are retried: the backend resolves the existing `TicketNFT`, reads each tier's minted supply, mints only missing batches, and finalizes minting once all configured supply is minted.

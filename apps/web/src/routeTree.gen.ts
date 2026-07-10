@@ -15,9 +15,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedConfirmRouteImport } from './routes/_authed/confirm'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthedTicketsIndexRouteImport } from './routes/_authed/tickets/index'
+import { Route as AuthedMarketplaceIndexRouteImport } from './routes/_authed/marketplace/index'
 import { Route as AuthedEventsIndexRouteImport } from './routes/_authed/events/index'
+import { Route as AuthedTicketsTicketIdRouteImport } from './routes/_authed/tickets/$ticketId'
+import { Route as AuthedMarketplaceEventIdRouteImport } from './routes/_authed/marketplace/$eventId'
 import { Route as AuthedEventsNewRouteImport } from './routes/_authed/events/new'
 import { Route as AuthedEventsEventIdRouteImport } from './routes/_authed/events/$eventId'
+import { Route as AuthedCheckoutEventIdRouteImport } from './routes/_authed/checkout/$eventId'
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
@@ -47,11 +52,32 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthedTicketsIndexRoute = AuthedTicketsIndexRouteImport.update({
+  id: '/tickets/',
+  path: '/tickets/',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedMarketplaceIndexRoute = AuthedMarketplaceIndexRouteImport.update({
+  id: '/marketplace/',
+  path: '/marketplace/',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedEventsIndexRoute = AuthedEventsIndexRouteImport.update({
   id: '/events/',
   path: '/events/',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedTicketsTicketIdRoute = AuthedTicketsTicketIdRouteImport.update({
+  id: '/tickets/$ticketId',
+  path: '/tickets/$ticketId',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedMarketplaceEventIdRoute =
+  AuthedMarketplaceEventIdRouteImport.update({
+    id: '/marketplace/$eventId',
+    path: '/marketplace/$eventId',
+    getParentRoute: () => AuthedRoute,
+  } as any)
 const AuthedEventsNewRoute = AuthedEventsNewRouteImport.update({
   id: '/events/new',
   path: '/events/new',
@@ -62,24 +88,39 @@ const AuthedEventsEventIdRoute = AuthedEventsEventIdRouteImport.update({
   path: '/events/$eventId',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedCheckoutEventIdRoute = AuthedCheckoutEventIdRouteImport.update({
+  id: '/checkout/$eventId',
+  path: '/checkout/$eventId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/confirm': typeof AuthedConfirmRoute
+  '/checkout/$eventId': typeof AuthedCheckoutEventIdRoute
   '/events/$eventId': typeof AuthedEventsEventIdRoute
   '/events/new': typeof AuthedEventsNewRoute
+  '/marketplace/$eventId': typeof AuthedMarketplaceEventIdRoute
+  '/tickets/$ticketId': typeof AuthedTicketsTicketIdRoute
   '/events/': typeof AuthedEventsIndexRoute
+  '/marketplace/': typeof AuthedMarketplaceIndexRoute
+  '/tickets/': typeof AuthedTicketsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/confirm': typeof AuthedConfirmRoute
+  '/checkout/$eventId': typeof AuthedCheckoutEventIdRoute
   '/events/$eventId': typeof AuthedEventsEventIdRoute
   '/events/new': typeof AuthedEventsNewRoute
+  '/marketplace/$eventId': typeof AuthedMarketplaceEventIdRoute
+  '/tickets/$ticketId': typeof AuthedTicketsTicketIdRoute
   '/events': typeof AuthedEventsIndexRoute
+  '/marketplace': typeof AuthedMarketplaceIndexRoute
+  '/tickets': typeof AuthedTicketsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,9 +130,14 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_authed/confirm': typeof AuthedConfirmRoute
+  '/_authed/checkout/$eventId': typeof AuthedCheckoutEventIdRoute
   '/_authed/events/$eventId': typeof AuthedEventsEventIdRoute
   '/_authed/events/new': typeof AuthedEventsNewRoute
+  '/_authed/marketplace/$eventId': typeof AuthedMarketplaceEventIdRoute
+  '/_authed/tickets/$ticketId': typeof AuthedTicketsTicketIdRoute
   '/_authed/events/': typeof AuthedEventsIndexRoute
+  '/_authed/marketplace/': typeof AuthedMarketplaceIndexRoute
+  '/_authed/tickets/': typeof AuthedTicketsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,18 +146,28 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/confirm'
+    | '/checkout/$eventId'
     | '/events/$eventId'
     | '/events/new'
+    | '/marketplace/$eventId'
+    | '/tickets/$ticketId'
     | '/events/'
+    | '/marketplace/'
+    | '/tickets/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
     | '/confirm'
+    | '/checkout/$eventId'
     | '/events/$eventId'
     | '/events/new'
+    | '/marketplace/$eventId'
+    | '/tickets/$ticketId'
     | '/events'
+    | '/marketplace'
+    | '/tickets'
   id:
     | '__root__'
     | '/'
@@ -120,9 +176,14 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/register'
     | '/_authed/confirm'
+    | '/_authed/checkout/$eventId'
     | '/_authed/events/$eventId'
     | '/_authed/events/new'
+    | '/_authed/marketplace/$eventId'
+    | '/_authed/tickets/$ticketId'
     | '/_authed/events/'
+    | '/_authed/marketplace/'
+    | '/_authed/tickets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -175,11 +236,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_authed/tickets/': {
+      id: '/_authed/tickets/'
+      path: '/tickets'
+      fullPath: '/tickets/'
+      preLoaderRoute: typeof AuthedTicketsIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/marketplace/': {
+      id: '/_authed/marketplace/'
+      path: '/marketplace'
+      fullPath: '/marketplace/'
+      preLoaderRoute: typeof AuthedMarketplaceIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/events/': {
       id: '/_authed/events/'
       path: '/events'
       fullPath: '/events/'
       preLoaderRoute: typeof AuthedEventsIndexRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/tickets/$ticketId': {
+      id: '/_authed/tickets/$ticketId'
+      path: '/tickets/$ticketId'
+      fullPath: '/tickets/$ticketId'
+      preLoaderRoute: typeof AuthedTicketsTicketIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/marketplace/$eventId': {
+      id: '/_authed/marketplace/$eventId'
+      path: '/marketplace/$eventId'
+      fullPath: '/marketplace/$eventId'
+      preLoaderRoute: typeof AuthedMarketplaceEventIdRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/events/new': {
@@ -194,6 +283,13 @@ declare module '@tanstack/react-router' {
       path: '/events/$eventId'
       fullPath: '/events/$eventId'
       preLoaderRoute: typeof AuthedEventsEventIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/checkout/$eventId': {
+      id: '/_authed/checkout/$eventId'
+      path: '/checkout/$eventId'
+      fullPath: '/checkout/$eventId'
+      preLoaderRoute: typeof AuthedCheckoutEventIdRouteImport
       parentRoute: typeof AuthedRoute
     }
   }
@@ -213,16 +309,26 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 interface AuthedRouteChildren {
   AuthedConfirmRoute: typeof AuthedConfirmRoute
+  AuthedCheckoutEventIdRoute: typeof AuthedCheckoutEventIdRoute
   AuthedEventsEventIdRoute: typeof AuthedEventsEventIdRoute
   AuthedEventsNewRoute: typeof AuthedEventsNewRoute
+  AuthedMarketplaceEventIdRoute: typeof AuthedMarketplaceEventIdRoute
+  AuthedTicketsTicketIdRoute: typeof AuthedTicketsTicketIdRoute
   AuthedEventsIndexRoute: typeof AuthedEventsIndexRoute
+  AuthedMarketplaceIndexRoute: typeof AuthedMarketplaceIndexRoute
+  AuthedTicketsIndexRoute: typeof AuthedTicketsIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedConfirmRoute: AuthedConfirmRoute,
+  AuthedCheckoutEventIdRoute: AuthedCheckoutEventIdRoute,
   AuthedEventsEventIdRoute: AuthedEventsEventIdRoute,
   AuthedEventsNewRoute: AuthedEventsNewRoute,
+  AuthedMarketplaceEventIdRoute: AuthedMarketplaceEventIdRoute,
+  AuthedTicketsTicketIdRoute: AuthedTicketsTicketIdRoute,
   AuthedEventsIndexRoute: AuthedEventsIndexRoute,
+  AuthedMarketplaceIndexRoute: AuthedMarketplaceIndexRoute,
+  AuthedTicketsIndexRoute: AuthedTicketsIndexRoute,
 }
 
 const AuthedRouteWithChildren =

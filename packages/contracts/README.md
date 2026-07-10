@@ -29,4 +29,4 @@ Then deploy the factory and mock marketplace:
 npx hardhat run scripts/deploy.ts --network localhost
 ```
 
-Copy the printed `Factory` and `MockMarketplace` addresses into `apps/api/.env`. See [`../../docs/local-onchain-development.md`](../../docs/local-onchain-development.md) for the full API + web flow.
+Copy the printed `Factory`, `TicketMarketplace`, and `PaymentToken (MockUSDC)` addresses into `apps/api/.env`. See [`../../docs/local-onchain-development.md`](../../docs/local-onchain-development.md) for the full API + web flow.

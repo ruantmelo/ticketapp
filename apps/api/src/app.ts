@@ -7,6 +7,7 @@ import { resolve } from "node:path";
 import { env } from "./config.js";
 import { authRoutes } from "./auth/routes.js";
 import { eventRoutes } from "./events/routes.js";
+import { marketplaceRoutes } from "./marketplace/routes.js";
 import { metadataRoutes } from "./metadata/routes.js";
 import { uploadRoutes } from "./uploads/routes.js";
 import { bullBoardRoutes } from "./admin/bull-board.js";
@@ -33,6 +34,7 @@ export async function buildServer() {
   await app.register(bullBoardRoutes, { prefix: "" });
   await app.register(metadataRoutes, { prefix: "" });
   await app.register(eventRoutes, { prefix: "" });
+  await app.register(marketplaceRoutes, { prefix: "" });
   await app.register(uploadRoutes, { prefix: "" });
 
   app.addHook("onClose", async () => {

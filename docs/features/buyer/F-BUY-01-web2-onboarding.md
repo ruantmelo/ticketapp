@@ -6,7 +6,7 @@
 | **Persona** | Buyer / Fan |
 | **Milestone** | M3 |
 | **Priority** | High |
-| **Status** | Not Started |
+| **Status** | In Progress |
 
 ## Summary
 
@@ -40,6 +40,12 @@ As a buyer, I want to register with my email and password and immediately be abl
 - **ADR 0007** (Custodial wallet provider) — **blocking dependency**. The choice of provider (Web3Auth, Magic.link, Particle, or a custom solution) determines the backend integration, key management approach, and recovery mechanisms. This ADR must be resolved before implementation begins.
 - **F-BUY-02** (Integrated Marketplace) — depends on this feature for wallet provisioning and transaction signing.
 - **F-BUY-03** (FIAT Payments) — depends on this feature for the wallet that receives purchased tickets.
+
+## Implementation Notes
+
+- **Auth exists**; the custodial wallet does not. Registration/login are implemented (`apps/web/src/routes/_auth/{login,register}.tsx`, `apps/api/src/auth/routes.ts`), but no per-user wallet is provisioned on signup.
+- **Dev stopgap in place of ADR 0007**: until a real custodial wallet provider is chosen, [F-BUY-02](F-BUY-02-marketplace.md) uses a single shared on-chain signer (`BUYER_CUSTODIAL_PRIVATE_KEY`, `apps/api/src/services/marketplace.service.ts`) to act on behalf of every buyer — the same pattern the organizer side already uses for `CHAIN_PRIVATE_KEY`. This is omnibus custody (one on-chain address, many app-level owners tracked in the database), explicitly not a solution to ADR 0007 — it only unblocks exercising the real marketplace contract end-to-end in dev/local.
+- ADR 0007 itself remains **Proposed** (not decided); real per-user custodial wallets, gas-fee strategy, and account recovery are still open.
 
 ## Open Questions
 

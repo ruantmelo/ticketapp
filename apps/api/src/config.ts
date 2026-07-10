@@ -27,6 +27,8 @@ export const env = {
   chainId: Number(process.env.CHAIN_ID ?? "80002"),
   ticketFactoryAddress: required("TICKET_FACTORY_ADDRESS", "0x0000000000000000000000000000000000000000"),
   ticketMarketplaceAddress: required("TICKET_MARKETPLACE_ADDRESS", "0x0000000000000000000000000000000000000000"),
+  paymentTokenAddress: required("PAYMENT_TOKEN_ADDRESS", "0x0000000000000000000000000000000000000000"),
+  buyerCustodialPrivateKey: required("BUYER_CUSTODIAL_PRIVATE_KEY", "0xYOUR_PRIVATE_KEY"),
   ticketBaseUri: required("TICKET_BASE_URI", "http://localhost:4000/metadata/"),
   amoyMaxSyncSupply: Number(process.env.AMOY_MAX_SYNC_SUPPLY ?? "1000"),
   redisUrl: required("REDIS_URL", "redis://127.0.0.1:6379"),

@@ -5,6 +5,7 @@ import type {
   EventInput,
   EventListItem,
 } from "@ticket-chain/shared";
+import type { MarketplaceEvent, OwnedTicket, ResaleListing } from "@/lib/marketplace-types";
 
 const API_BASE = "/api";
 
@@ -42,6 +43,21 @@ export const api = {
     request<Event>(`/events/draft/${id}`, { method: "PUT", body: JSON.stringify(data) }),
   publishEvent: (data: EventInput) =>
     request<Event>("/events", { method: "POST", body: JSON.stringify(data) }),
+
+  listMarketplaceEvents: () => request<{ items: MarketplaceEvent[] }>("/marketplace/events"),
+  getMarketplaceEvent: (eventId: string) => request<MarketplaceEvent>(`/marketplace/events/${eventId}`),
+  listResaleListings: (eventId: string) => request<{ items: ResaleListing[] }>(`/marketplace/events/${eventId}/listings`),
+  buyPrimaryTicket: (eventId: string, tierId: string) =>
+    request<OwnedTicket>(`/marketplace/events/${eventId}/buy`, { method: "POST", body: JSON.stringify({ tierId }) }),
+  buySecondaryListing: (listingId: string) =>
+    request<OwnedTicket>(`/marketplace/listings/${listingId}/buy`, { method: "POST" }),
+
+  listMyTickets: () => request<{ items: OwnedTicket[] }>("/tickets"),
+  getTicket: (ticketId: string) => request<OwnedTicket>(`/tickets/${ticketId}`),
+  createResaleListing: (ticketId: string, price: number) =>
+    request<OwnedTicket>(`/tickets/${ticketId}/listings`, { method: "POST", body: JSON.stringify({ price }) }),
+  cancelResaleListing: (ticketId: string) =>
+    request<OwnedTicket>(`/tickets/${ticketId}/listings/cancel`, { method: "POST" }),
 
   uploadArtwork: async (file: File): Promise<{ url: string }> => {
     const form = new FormData();

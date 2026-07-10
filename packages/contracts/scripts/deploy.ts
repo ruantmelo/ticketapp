@@ -8,7 +8,8 @@ async function main() {
   }
   const publicClient = await viem.getPublicClient();
 
-  const marketplace = await viem.deployContract('MockMarketplace');
+  const paymentToken = await viem.deployContract('MockUSDC');
+  const marketplace = await viem.deployContract('TicketMarketplace', [paymentToken.address]);
   const factory = await viem.deployContract('TicketFactory', [deployer.account.address, deployer.account.address]);
   const writableFactory = factory as any;
 
@@ -41,7 +42,8 @@ async function main() {
   await publicClient.waitForTransactionReceipt({ hash: finalizeHash });
 
   console.log(`Factory: ${factory.address}`);
-  console.log(`MockMarketplace: ${marketplace.address}`);
+  console.log(`TicketMarketplace: ${marketplace.address}`);
+  console.log(`PaymentToken (MockUSDC): ${paymentToken.address}`);
   console.log(`TicketNFT: ${ticketAddress}`);
 }
 

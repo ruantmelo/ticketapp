@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { Calendar, FileText, PlusCircle, Settings, Ticket } from "lucide-react";
+import { Calendar, FileText, PlusCircle, Settings, Store, Ticket } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 type NavItem =
@@ -35,11 +36,19 @@ const ORG_ITEMS: NavItem[] = [
   { label: "Rascunhos", to: "/events", search: { status: "draft" }, icon: FileText },
 ];
 
+const BUYER_ITEMS: BaseNavItem[] = [
+  { label: "Marketplace", to: "/marketplace", icon: Store },
+  { label: "Meus ingressos", to: "/tickets", icon: Ticket },
+];
+
 const ACCOUNT_ITEMS: NavItem[] = [
   { label: "Configurações", to: "/settings", icon: Settings },
 ];
 
 export function Sidebar() {
+  const { user } = useAuth();
+  const isBuyer = user?.role === "buyer";
+
   return (
     <aside className="flex h-full w-[280px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar">
       <div className="flex items-center gap-2.5 px-6 py-5">
@@ -48,16 +57,24 @@ export function Sidebar() {
         </div>
         <div className="flex flex-col">
           <span className="text-sm font-bold text-card-foreground">Ticket App</span>
-          <span className="text-xs text-sidebar-foreground">Painel do organizador</span>
+          <span className="text-xs text-sidebar-foreground">{isBuyer ? "Área do comprador" : "Painel do organizador"}</span>
         </div>
       </div>
 
       <nav className="flex flex-1 flex-col gap-6 px-3 py-4">
-        <SidebarSection title="ORGANIZADOR">
-          {ORG_ITEMS.map((item) => (
-            <SidebarLink key={navKey(item)} item={item} />
-          ))}
-        </SidebarSection>
+        {isBuyer ? (
+          <SidebarSection title="COMPRADOR">
+            {BUYER_ITEMS.map((item) => (
+              <SidebarLink key={navKey(item)} item={item} />
+            ))}
+          </SidebarSection>
+        ) : (
+          <SidebarSection title="ORGANIZADOR">
+            {ORG_ITEMS.map((item) => (
+              <SidebarLink key={navKey(item)} item={item} />
+            ))}
+          </SidebarSection>
+        )}
 
         <SidebarSection title="CONTA">
           {ACCOUNT_ITEMS.map((item) => (

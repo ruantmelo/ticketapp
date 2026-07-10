@@ -45,7 +45,7 @@ type NormalizedTier = TicketTier & {
   onChainTierId: bigint;
 };
 
-const TICKETING_CHAIN: Chain = defineChain({
+export const TICKETING_CHAIN: Chain = defineChain({
   id: env.chainId,
   name: env.chainId === 31337 ? "Hardhat Local" : "Polygon Amoy",
   nativeCurrency: env.chainId === 31337
@@ -410,8 +410,17 @@ function buildEventBaseTokenUri(eventId: string): string {
   return `${env.ticketBaseUri.replace(/\/+$/, "")}/${eventId}/`;
 }
 
-function loadArtifactAbi(name: "TicketFactory" | "TicketNFT"): Abi {
-  const artifactPath = resolveRepoRoot("packages/contracts/artifacts/contracts", `${name}.sol`, `${name}.json`);
+export type ContractArtifactName = "TicketFactory" | "TicketNFT" | "TicketMarketplace" | "MockUSDC";
+
+const ARTIFACT_SOURCE_PATH: Record<ContractArtifactName, string> = {
+  TicketFactory: "TicketFactory.sol",
+  TicketNFT: "TicketNFT.sol",
+  TicketMarketplace: "TicketMarketplace.sol",
+  MockUSDC: "test/MockUSDC.sol",
+};
+
+export function loadArtifactAbi(name: ContractArtifactName): Abi {
+  const artifactPath = resolveRepoRoot("packages/contracts/artifacts/contracts", ARTIFACT_SOURCE_PATH[name], `${name}.json`);
   if (!existsSync(artifactPath)) {
     throw new Error(`Missing Hardhat artifact for ${name}. Run pnpm --filter @ticket-chain/contracts build first.`);
   }

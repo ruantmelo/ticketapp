@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError } from "@/components/ui/field";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth, isApiError } from "@/lib/auth";
+import { defaultRouteFor } from "@/lib/rbac";
 
 function RegisterPage() {
   const { register } = useAuth();
@@ -27,8 +28,8 @@ function RegisterPage() {
     setFieldErrors({});
     setSubmitting(true);
     try {
-      await register(name, email, password, role);
-      await navigate({ to: "/events" });
+      const user = await register(name, email, password, role);
+      await navigate({ to: defaultRouteFor(user) });
     } catch (err) {
       if (isApiError(err)) {
         if (err.fields) setFieldErrors(err.fields);

@@ -18,3 +18,34 @@ export const eventDetailQuery = (id: string) =>
     queryFn: () => api.getEvent(id),
     enabled: !!id,
   });
+
+export const marketplaceEventsQuery = queryOptions({
+  queryKey: ["marketplace", "events"],
+  queryFn: () => api.listMarketplaceEvents(),
+});
+
+export const marketplaceEventQuery = (eventId: string) =>
+  queryOptions({
+    queryKey: ["marketplace", "events", eventId],
+    queryFn: () => api.getMarketplaceEvent(eventId),
+    enabled: !!eventId,
+  });
+
+export const resaleListingsQuery = (eventId: string) =>
+  queryOptions({
+    queryKey: ["marketplace", "listings", eventId],
+    queryFn: () => api.listResaleListings(eventId),
+    enabled: !!eventId,
+  });
+
+export const myTicketsQuery = queryOptions({
+  queryKey: ["tickets"],
+  queryFn: () => api.listMyTickets(),
+});
+
+export const ticketDetailQuery = (ticketId: string) =>
+  queryOptions({
+    queryKey: ["tickets", ticketId],
+    queryFn: () => api.getTicket(ticketId),
+    enabled: !!ticketId,
+  });

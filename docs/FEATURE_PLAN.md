@@ -29,17 +29,17 @@ F-ORG-02 has local Hardhat + API + frontend minting validated, with Amoy smoke d
 |----|---------|----------|-----------|--------|------|
 | F-ORG-01 | Event Creation Panel | High | M2 | In Progress | [spec](features/organizer/F-ORG-01-event-creation-panel.md) |
 | F-ORG-02 | Minting Engine | High | M1, M2 | In Progress | [spec](features/organizer/F-ORG-02-minting-engine.md) |
-| F-ORG-03 | Secondary Market Configuration | High | M1, M2 | Not Started | [spec](features/organizer/F-ORG-03-secondary-market-config.md) |
+| F-ORG-03 | Secondary Market Configuration | High | M1, M2 | In Progress | [spec](features/organizer/F-ORG-03-secondary-market-config.md) |
 | F-ORG-04 | Analytics Dashboard | Medium | M5 | Not Started | [spec](features/organizer/F-ORG-04-analytics-dashboard.md) |
 
 ### Buyer / Fan
 
 | ID | Feature | Priority | Milestone | Status | Spec |
 |----|---------|----------|-----------|--------|------|
-| F-BUY-01 | Web2.5 Onboarding (Custodial Wallet) | High | M3 | Not Started | [spec](features/buyer/F-BUY-01-web2-onboarding.md) |
-| F-BUY-02 | Integrated Marketplace | High | M3 | Not Started | [spec](features/buyer/F-BUY-02-marketplace.md) |
-| F-BUY-03 | FIAT Payments (Pix + Card) | Medium | M5 | Not Started | [spec](features/buyer/F-BUY-03-fiat-payments.md) |
-| F-BUY-04 | Dynamic Ticket QR (Anti-Print) | High | M4 | Not Started | [spec](features/buyer/F-BUY-04-dynamic-ticket-qr.md) |
+| F-BUY-01 | Web2.5 Onboarding (Custodial Wallet) | High | M3 | In Progress | [spec](features/buyer/F-BUY-01-web2-onboarding.md) |
+| F-BUY-02 | Integrated Marketplace | High | M3 | In Progress | [spec](features/buyer/F-BUY-02-marketplace.md) |
+| F-BUY-03 | FIAT Payments (Pix + Card) | Medium | M5 | In Progress | [spec](features/buyer/F-BUY-03-fiat-payments.md) |
+| F-BUY-04 | Dynamic Ticket QR (Anti-Print) | High | M4 | In Progress | [spec](features/buyer/F-BUY-04-dynamic-ticket-qr.md) |
 
 ### Validator / Door Staff
 
@@ -56,9 +56,9 @@ F-ORG-02 has local Hardhat + API + frontend minting validated, with Amoy smoke d
 | High priority | 7 |
 | Medium priority | 3 |
 | Done | 0 |
-| In Progress | 2 |
+| In Progress | 7 |
 | Blocked | 0 |
-| Not Started | 8 |
+| Not Started | 3 |
 
 ## Blocked Items
 

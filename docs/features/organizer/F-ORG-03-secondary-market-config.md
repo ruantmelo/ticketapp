@@ -6,7 +6,7 @@
 | **Persona** | Organizer / Producer |
 | **Milestone** | M1 (contract), M2 (full integration) |
 | **Priority** | High |
-| **Status** | Not Started |
+| **Status** | In Progress |
 
 ## Summary
 
@@ -53,6 +53,12 @@ As an organizer, I want to set a maximum resale price and a royalty percentage f
 - **Price cap / royalty mutability**: Immutable after deployment. Set in the constructor, never changeable.
 - **Sale price enforcement**: On-chain escrow via the dedicated `TicketMarketplace` contract. The marketplace holds the NFT during listing, accepts ERC-20 payment from the buyer, checks the cap, routes the royalty to the organizer, pays the seller, and transfers the NFT atomically.
 - **Royalties on**: Secondary sales only. Primary sales are organizer → buyer at face value (no royalty needed).
+
+## Implementation Notes
+
+- **Contract side (M1): done.** `TicketNFT.sol`'s constructor takes `maxResalePriceMultiplier`/`royaltyPercentage`, stores them as immutables, and calls `_setDefaultRoyalty` (ERC-2981). `maxResalePrice(tokenId)` and `royaltyInfo(tokenId, price)` views exist and are consumed directly by the real `TicketMarketplace.sol` — no changes needed to `TicketNFT.sol` when the marketplace was implemented.
+- **Full integration (M2): done.** F-ORG-01's panel captures cap/royalty per tier; `apps/api/src/events/routes.ts`'s `weightedAverage` reconciles them to a single event-level value for display, and `minting.service.ts`'s `validateTierEconomics` enforces all tiers share the same value before minting — matching the on-chain immutable. The organizer event detail page (`apps/web/src/routes/_authed/events/$eventId.tsx`) already shows the enforced cap/royalty. The marketplace ([F-BUY-02](../buyer/F-BUY-02-marketplace.md)) reads the cap on-chain via `maxResalePrice` and rejects over-cap listings at the contract level (`packages/contracts/test/marketplace.test.ts`).
+- Remaining open items below are unrelated to the enforcement mechanism itself (already live) — they're about gas-fee policy and partial-fill listings.
 
 ## Open Questions
 

@@ -6,7 +6,7 @@
 | **Persona** | Buyer / Fan |
 | **Milestone** | M4 |
 | **Priority** | High |
-| **Status** | Not Started |
+| **Status** | In Progress |
 
 ## Summary
 
@@ -47,6 +47,12 @@ As an organizer, I want the ticket QR to be dynamic and wallet-bound, so that sc
 - **F-BUY-01** (Web2.5 Onboarding) — the buyer must have a custodial wallet capable of signing the QR payload.
 - **F-VAL-01** (Scanner App) — the scanner is the other half of this feature; it validates what this feature generates.
 - **ADR 0009** (Dynamic QR signing scheme) — **blocking dependency**. The signing algorithm, payload structure, rotation interval, and time-window tolerance must be defined before implementation. This ADR must be resolved before M4 development begins.
+
+## Implementation Notes
+
+- **UI prototype only** (`apps/web/src/routes/_authed/tickets/$ticketId.tsx`): the ticket detail page renders a QR code (via the `qrcode` package) that regenerates every 10 seconds with a progress bar/countdown, matching the rotation UX described here.
+- **Payload is not cryptographically signed.** The current payload is a plain string (`ticket:{tokenId}:{10s-window-index}`) with no wallet signature — ADR 0009 (signing scheme, rotation interval, clock-skew tolerance) is still unresolved and blocks the real implementation.
+- There is no scanner-side verification yet (that's [F-VAL-01](../validator/F-VAL-01-scanner-app.md)), and the ticket's on-chain ownership/status now comes from the real [F-BUY-02](F-BUY-02-marketplace.md) backend — the QR is disabled in the UI once a ticket's status is `listed` or `used`.
 
 ## Open Questions
 

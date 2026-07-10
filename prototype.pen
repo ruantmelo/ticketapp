@@ -1,5 +1,5 @@
 {
-  "version": "2.13",
+  "version": "2.14",
   "children": [
     {
       "type": "frame",
@@ -2267,7 +2267,7 @@
                   "id": "5wzoN",
                   "type": "ref",
                   "ref": "zR7aJ",
-                  "x": 121,
+                  "x": 125,
                   "y": 24,
                   "descendants": {
                     "uuR0c": {
@@ -2387,7 +2387,7 @@
               "id": "ayWVq",
               "type": "ref",
               "ref": "wf5LJ",
-              "x": 111,
+              "x": 117,
               "y": 4,
               "descendants": {
                 "z2WJL": {
@@ -2399,7 +2399,7 @@
               "id": "lBGNk",
               "type": "ref",
               "ref": "wf5LJ",
-              "x": 181,
+              "x": 190,
               "y": 4,
               "descendants": {
                 "z2WJL": {
@@ -2411,7 +2411,7 @@
               "id": "GdraB",
               "type": "ref",
               "ref": "wf5LJ",
-              "x": 254,
+              "x": 265,
               "y": 4,
               "descendants": {
                 "z2WJL": {
@@ -2534,7 +2534,7 @@
               "id": "QtvqN",
               "type": "ref",
               "ref": "ycIFH",
-              "x": 135,
+              "x": 138,
               "y": 0,
               "descendants": {
                 "aWqVc": {
@@ -2932,7 +2932,7 @@
               "id": "oslC0",
               "type": "ref",
               "ref": "zR7aJ",
-              "x": 924,
+              "x": 920,
               "y": 0
             }
           ]
@@ -2964,7 +2964,7 @@
               "id": "OZwkJ",
               "type": "ref",
               "ref": "OprrH",
-              "x": 827,
+              "x": 822,
               "y": 0
             }
           ]
@@ -3151,7 +3151,7 @@
                   "id": "ndtBtn1",
                   "type": "ref",
                   "ref": "zR7aJ",
-                  "x": 924,
+                  "x": 920,
                   "y": 0
                 }
               ]
@@ -4444,8 +4444,8 @@
                   "id": "smTabpSYy61",
                   "type": "ref",
                   "ref": "ahgnz",
-                  "x": 0,
-                  "y": 0,
+                  "x": 4,
+                  "y": 4,
                   "name": "Tab Detalhes",
                   "descendants": {
                     "z2WJL": {
@@ -4457,8 +4457,8 @@
                   "id": "smTabpSYy62",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 94,
+                  "y": 4,
                   "name": "Tab Ingressos",
                   "descendants": {
                     "z2WJL": {
@@ -4470,8 +4470,8 @@
                   "id": "smTabpSYy63",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 190,
+                  "y": 4,
                   "name": "Tab Mercado secundário",
                   "descendants": {
                     "z2WJL": {
@@ -4483,8 +4483,8 @@
                   "id": "smTabpSYy64",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 357,
+                  "y": 4,
                   "name": "Tab Revisão",
                   "descendants": {
                     "z2WJL": {
@@ -4492,12 +4492,6 @@
                     }
                   }
                 }
-              ],
-              "slot": [
-                "ahgnz",
-                "wf5LJ",
-                "wf5LJ",
-                "wf5LJ"
               ]
             },
             {
@@ -6447,24 +6441,24 @@
                   "id": "td5ax",
                   "name": "Page Title",
                   "fill": "$--foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fit_content(0)",
                   "content": "Meus eventos",
                   "fontFamily": "$--font-primary",
                   "fontSize": 28,
-                  "fontWeight": "600",
-                  "width": "fit_content",
-                  "textGrowth": "fixed-width"
+                  "fontWeight": "600"
                 },
                 {
                   "type": "text",
                   "id": "tIAlm",
                   "name": "Page Desc",
                   "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
                   "content": "6 eventos · 4 publicados · 1 falha de minting · 1 rascunho",
                   "fontFamily": "$--font-primary",
                   "fontSize": 14,
-                  "fontWeight": "normal",
-                  "width": "fill_container",
-                  "textGrowth": "fixed-width"
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -6499,12 +6493,12 @@
                               "id": "tZ7oQ",
                               "name": "Card Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Festival Verão 2026",
                               "fontFamily": "$--font-primary",
                               "fontSize": 18,
-                              "fontWeight": "600",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "600"
                             },
                             {
                               "type": "frame",
@@ -6525,12 +6519,12 @@
                                   "id": "tKrb5",
                                   "name": "Badge Text",
                                   "fill": "$--color-success-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Finalizado",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -6541,12 +6535,12 @@
                           "id": "t9XJG",
                           "name": "Card Sub",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "18/01/2026 · Arena Mauro Sampaio, Maceió · finalized minting",
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6574,24 +6568,24 @@
                                   "id": "tFAMm",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "contractAddress",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "t4UI7",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "0xA1b2…E9F0",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -6608,24 +6602,24 @@
                                   "id": "tcO0d",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "totalSupply",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "trADi",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "620",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -6652,24 +6646,24 @@
                                   "id": "t5IRY",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "ticket tiers",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tY6Qp",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "3 ticket tiers",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -6686,24 +6680,24 @@
                                   "id": "t28Am",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Minting Engine",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tjVYb",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "finalized minting",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -6730,12 +6724,12 @@
                                   "id": "tvMHh",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Rede",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "frame",
@@ -6756,12 +6750,12 @@
                                       "id": "trfw3",
                                       "name": "Badge Text",
                                       "fill": "$--color-info-foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fit_content(0)",
                                       "content": "Amoy",
                                       "fontFamily": "$--font-primary",
                                       "fontSize": 13,
-                                      "fontWeight": "500",
-                                      "width": "fit_content",
-                                      "textGrowth": "fixed-width"
+                                      "fontWeight": "500"
                                     }
                                   ]
                                 }
@@ -6780,12 +6774,12 @@
                                   "id": "tpwxn",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Consulta local ou Amoy",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -6796,12 +6790,12 @@
                           "id": "tMXCw",
                           "name": "Note",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Consulte o contrato e o estado do minting antes de qualquer ação no secondary market.",
                           "fontFamily": "$--font-primary",
                           "fontSize": 13,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6867,12 +6861,12 @@
                               "id": "t7fNv",
                               "name": "Card Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Show Nacional Acústico",
                               "fontFamily": "$--font-primary",
                               "fontSize": 18,
-                              "fontWeight": "600",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "600"
                             },
                             {
                               "type": "frame",
@@ -6893,12 +6887,12 @@
                                   "id": "tFMIh",
                                   "name": "Badge Text",
                                   "fill": "$--color-success-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Finalizado",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -6909,12 +6903,12 @@
                           "id": "tWECw",
                           "name": "Card Sub",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "05/02/2026 · Teatro Gustavo Leite, Maceió · finalized minting",
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -6942,24 +6936,24 @@
                                   "id": "tinm9",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "contractAddress",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tcADL",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "0xB4c3…9911",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -6976,24 +6970,24 @@
                                   "id": "tdJYt",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "totalSupply",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "t8lwb",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "400",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7020,24 +7014,24 @@
                                   "id": "tBBCe",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "ticket tiers",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tNqrO",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "2 ticket tiers",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -7054,24 +7048,24 @@
                                   "id": "t5LZS",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Minting Engine",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tO7g4",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "finalized minting",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7098,12 +7092,12 @@
                                   "id": "tVZzj",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Rede",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "frame",
@@ -7124,12 +7118,12 @@
                                       "id": "tkKjw",
                                       "name": "Badge Text",
                                       "fill": "$--secondary-foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fit_content(0)",
                                       "content": "Local",
                                       "fontFamily": "$--font-primary",
                                       "fontSize": 13,
-                                      "fontWeight": "500",
-                                      "width": "fit_content",
-                                      "textGrowth": "fixed-width"
+                                      "fontWeight": "500"
                                     }
                                   ]
                                 }
@@ -7148,12 +7142,12 @@
                                   "id": "t1QhO",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Consulta local ou Amoy",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7164,12 +7158,12 @@
                           "id": "ttf4f",
                           "name": "Note",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Consulte o contrato e o estado do minting antes de qualquer ação no secondary market.",
                           "fontFamily": "$--font-primary",
                           "fontSize": 13,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7235,12 +7229,12 @@
                               "id": "tut17",
                               "name": "Card Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Encontro Gospel",
                               "fontFamily": "$--font-primary",
                               "fontSize": 18,
-                              "fontWeight": "600",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "600"
                             },
                             {
                               "type": "frame",
@@ -7261,12 +7255,12 @@
                                   "id": "tI9JN",
                                   "name": "Badge Text",
                                   "fill": "$--destructive-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Falha no minting",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -7277,12 +7271,12 @@
                           "id": "t8EDC",
                           "name": "Card Sub",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "22/02/2026 · Centro de Convenções, Maceió · Minting Engine travado",
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7310,24 +7304,24 @@
                                   "id": "tgciQ",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "contractAddress",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "twxvb",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "0xF0a1…77ce",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -7344,24 +7338,24 @@
                                   "id": "tybtV",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "totalSupply",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "thl7A",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "1200",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7388,24 +7382,24 @@
                                   "id": "tNfwP",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "ticket tiers",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "t11Wz",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "4 ticket tiers",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             },
@@ -7422,24 +7416,24 @@
                                   "id": "t5EmF",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Minting Engine",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tdxVn",
                                   "name": "Value",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "falhou · retry pendente",
                                   "fontFamily": "$--font-secondary",
                                   "fontSize": 14,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7466,12 +7460,12 @@
                                   "id": "tvs2r",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "Rede",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 },
                                 {
                                   "type": "frame",
@@ -7492,12 +7486,12 @@
                                       "id": "tSqHb",
                                       "name": "Badge Text",
                                       "fill": "$--color-info-foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fit_content(0)",
                                       "content": "Amoy",
                                       "fontFamily": "$--font-primary",
                                       "fontSize": 13,
-                                      "fontWeight": "500",
-                                      "width": "fit_content",
-                                      "textGrowth": "fixed-width"
+                                      "fontWeight": "500"
                                     }
                                   ]
                                 }
@@ -7516,12 +7510,12 @@
                                   "id": "tLqbp",
                                   "name": "Label",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Consulta local ou Amoy",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -7532,12 +7526,12 @@
                           "id": "tux6E",
                           "name": "Note",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Consulte o contrato e o estado do minting antes de qualquer ação no secondary market.",
                           "fontFamily": "$--font-primary",
                           "fontSize": 13,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -7607,7 +7601,7 @@
             "2c8Tk": {
               "children": [
                 {
-                  "id": "HRHcu",
+                  "id": "PYBcS",
                   "type": "ref",
                   "ref": "hZwCK",
                   "name": "Section Org",
@@ -7618,7 +7612,7 @@
                   }
                 },
                 {
-                  "id": "a4mII",
+                  "id": "n3yXG",
                   "type": "ref",
                   "ref": "cpj5L",
                   "name": "Nav Criar",
@@ -7633,7 +7627,7 @@
                   }
                 },
                 {
-                  "id": "jTqf7",
+                  "id": "VL6RZ",
                   "type": "ref",
                   "ref": "4jfFd",
                   "name": "Nav Meus Eventos",
@@ -7648,7 +7642,7 @@
                   }
                 },
                 {
-                  "id": "W6oXR",
+                  "id": "zMNuY",
                   "type": "ref",
                   "ref": "cpj5L",
                   "name": "Nav Rascunhos",
@@ -7663,7 +7657,7 @@
                   }
                 },
                 {
-                  "id": "OVnW2",
+                  "id": "VlL6O",
                   "type": "ref",
                   "ref": "hZwCK",
                   "name": "Section Conta",
@@ -7674,7 +7668,7 @@
                   }
                 },
                 {
-                  "id": "PpsHV",
+                  "id": "jE2qD",
                   "type": "ref",
                   "ref": "cpj5L",
                   "name": "Nav Config",
@@ -7826,12 +7820,12 @@
                       "id": "tCnv6",
                       "name": "Page Title",
                       "fill": "$--foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Encontro Gospel",
                       "fontFamily": "$--font-primary",
                       "fontSize": 28,
-                      "fontWeight": "600",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "600"
                     },
                     {
                       "type": "frame",
@@ -7852,12 +7846,12 @@
                           "id": "tqFO5",
                           "name": "Badge Text",
                           "fill": "$--destructive-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fit_content(0)",
                           "content": "Falha no minting",
                           "fontFamily": "$--font-primary",
                           "fontSize": 13,
-                          "fontWeight": "500",
-                          "width": "fit_content",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "500"
                         }
                       ]
                     }
@@ -7868,12 +7862,12 @@
                   "id": "tqfUZ",
                   "name": "Page Desc",
                   "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
                   "content": "22/02/2026 · Centro de Convenções, Maceió · painel do Organizer com consulta Local/Amoy e acompanhamento do mint.",
                   "fontFamily": "$--font-primary",
                   "fontSize": 14,
-                  "fontWeight": "normal",
-                  "width": "fill_container",
-                  "textGrowth": "fixed-width"
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -7892,24 +7886,24 @@
                       "id": "tyNIN",
                       "name": "Card Title",
                       "fill": "$--card-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Imagem do evento",
                       "fontFamily": "$--font-primary",
                       "fontSize": 18,
-                      "fontWeight": "600",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "600"
                     },
                     {
                       "type": "text",
                       "id": "tYHBu",
                       "name": "Card Sub",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Pré-visualização da capa usada na página pública.",
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -7954,24 +7948,24 @@
                               "id": "tf5T3",
                               "name": "Placeholder Title",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fit_content(0)",
                               "content": "Espaço para a arte do evento",
                               "fontFamily": "$--font-primary",
                               "fontSize": 16,
-                              "fontWeight": "500",
-                              "width": "fit_content",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
                               "type": "text",
                               "id": "tVPx7",
                               "name": "Placeholder Hint",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fit_content(0)",
                               "content": "Envie uma imagem de capa para dar contexto visual ao evento.",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "normal",
-                              "width": "fit_content",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -7980,12 +7974,12 @@
                           "id": "tEsHn",
                           "name": "Card Note",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Área reservada para a capa principal do evento.",
                           "fontFamily": "$--font-primary",
                           "fontSize": 13,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -8019,12 +8013,12 @@
                           "id": "ttOhQ",
                           "name": "Card Title",
                           "fill": "$--card-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Visão on-chain",
                           "fontFamily": "$--font-primary",
                           "fontSize": 18,
-                          "fontWeight": "600",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "600"
                         },
                         {
                           "type": "frame",
@@ -8045,12 +8039,12 @@
                               "id": "tzivU",
                               "name": "Badge Text",
                               "fill": "$--secondary-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fit_content(0)",
                               "content": "ERC-721",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "500",
-                              "width": "fit_content",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             }
                           ]
                         }
@@ -8061,12 +8055,12 @@
                       "id": "tKcwe",
                       "name": "Card Sub",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Resumo do contrato, do mint e das regras de revenda.",
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -8094,24 +8088,24 @@
                               "id": "tSnwP",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Endereço do contrato",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "tC8xV",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "0xF0a1…77ce",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8128,24 +8122,24 @@
                               "id": "tD6C6",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Total de ingressos",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "tLhcN",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "1200",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8172,24 +8166,24 @@
                               "id": "tLNMP",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Status do mint",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "t1twQ",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "falhou na confirmação final",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8206,24 +8200,24 @@
                               "id": "tBAC4",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Código do evento",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "tmiwH",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "EVT-ORG-01-042",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8250,24 +8244,24 @@
                               "id": "tA61I",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Padrão do ingresso",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "tgLCz",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "ERC-721",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8284,24 +8278,24 @@
                               "id": "tAI2w",
                               "name": "Label",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Revenda",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "text",
                               "id": "tXEWZ",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "bloqueada fora do marketplace",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8363,24 +8357,24 @@
                       "id": "tTve7",
                       "name": "Card Title",
                       "fill": "$--card-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Regras de revenda",
                       "fontFamily": "$--font-primary",
                       "fontSize": 18,
-                      "fontWeight": "600",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "600"
                     },
                     {
                       "type": "text",
                       "id": "tUBfy",
                       "name": "Card Sub",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "As regras valem para todos os ingressos deste evento.",
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -8392,38 +8386,38 @@
                       "id": "fETdj",
                       "name": "Rule Box",
                       "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 6,
                       "fill": "$--accent",
-                      "padding": 16,
                       "cornerRadius": "$--radius-none",
                       "stroke": "$--input",
                       "strokeWidth": 1,
                       "strokeAlignment": "inner",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 16,
                       "children": [
                         {
                           "type": "text",
                           "id": "t17gR",
                           "name": "Rule Lead",
                           "fill": "$--foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Regras iguais para todos os ingressos:",
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "500",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "500"
                         },
                         {
                           "type": "text",
                           "id": "tKS5X",
                           "name": "Rule Text",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Limite de revenda 120% do preço original · Repasse ao organizador 5% em revendas.",
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -8449,24 +8443,24 @@
                       "id": "tROpL",
                       "name": "Card Title",
                       "fill": "$--card-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Ingressos por setor",
                       "fontFamily": "$--font-primary",
                       "fontSize": 18,
-                      "fontWeight": "600",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "600"
                     },
                     {
                       "type": "text",
                       "id": "tJzOS",
                       "name": "Card Sub",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Cada setor mostra apenas o preço original e a quantidade.",
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -8493,12 +8487,12 @@
                               "id": "tIkkH",
                               "name": "Header",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Setor / tipo",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             }
                           ]
                         },
@@ -8514,12 +8508,12 @@
                               "id": "t00EO",
                               "name": "Header",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Preço original",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             }
                           ]
                         },
@@ -8535,12 +8529,12 @@
                               "id": "tyepy",
                               "name": "Header",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Quantidade",
                               "fontFamily": "$--font-primary",
                               "fontSize": 12,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             }
                           ]
                         }
@@ -8568,8 +8562,7 @@
                               "name": "Swatch",
                               "width": 8,
                               "height": 24,
-                              "fill": "#0f5ffe",
-                              "children": []
+                              "fill": "#0f5ffe"
                             },
                             {
                               "type": "frame",
@@ -8584,24 +8577,24 @@
                                   "id": "tuPxd",
                                   "name": "Tier Name",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Pista",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 14,
-                                  "fontWeight": "500",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tRSXA",
                                   "name": "Tier Desc",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "setor popular",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -8619,12 +8612,12 @@
                               "id": "t7wsI",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "R$ 120,00",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8640,12 +8633,12 @@
                               "id": "tbsqs",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "600",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8673,8 +8666,7 @@
                               "name": "Swatch",
                               "width": 8,
                               "height": 24,
-                              "fill": "#1f6feb",
-                              "children": []
+                              "fill": "#1f6feb"
                             },
                             {
                               "type": "frame",
@@ -8689,24 +8681,24 @@
                                   "id": "tUtcl",
                                   "name": "Tier Name",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "VIP",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 14,
-                                  "fontWeight": "500",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tALlq",
                                   "name": "Tier Desc",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "acesso privilegiado",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -8724,12 +8716,12 @@
                               "id": "tBssz",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "R$ 280,00",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8745,12 +8737,12 @@
                               "id": "tOGLH",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "400",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8778,8 +8770,7 @@
                               "name": "Swatch",
                               "width": 8,
                               "height": 24,
-                              "fill": "#5b8cff",
-                              "children": []
+                              "fill": "#5b8cff"
                             },
                             {
                               "type": "frame",
@@ -8794,24 +8785,24 @@
                                   "id": "tUFDj",
                                   "name": "Tier Name",
                                   "fill": "$--foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "Camarote",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 14,
-                                  "fontWeight": "500",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 },
                                 {
                                   "type": "text",
                                   "id": "tyDVz",
                                   "name": "Tier Desc",
                                   "fill": "$--muted-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
                                   "content": "vista reservada",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 12,
-                                  "fontWeight": "normal",
-                                  "width": "fill_container",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -8829,12 +8820,12 @@
                               "id": "to1LL",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "R$ 520,00",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -8850,12 +8841,12 @@
                               "id": "tTwji",
                               "name": "Value",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "200",
                               "fontFamily": "$--font-secondary",
                               "fontSize": 14,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -8891,12 +8882,12 @@
                           "id": "tocI4",
                           "name": "Card Title",
                           "fill": "$--card-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Minting Engine",
                           "fontFamily": "$--font-primary",
                           "fontSize": 18,
-                          "fontWeight": "600",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "600"
                         },
                         {
                           "type": "frame",
@@ -8917,12 +8908,12 @@
                               "id": "t9kN3",
                               "name": "Badge Text",
                               "fill": "$--destructive-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fit_content(0)",
                               "content": "Falha",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "500",
-                              "width": "fit_content",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             }
                           ]
                         }
@@ -8933,12 +8924,12 @@
                       "id": "teuPI",
                       "name": "Card Sub",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Acompanhamento da tentativa de mint e dos próximos passos.",
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -8981,12 +8972,12 @@
                                   "id": "tC1BC",
                                   "name": "Badge Text",
                                   "fill": "$--color-success-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "1",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -9005,24 +8996,24 @@
                               "id": "tFpau",
                               "name": "Step Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Evento validado",
                               "fontFamily": "$--font-primary",
                               "fontSize": 14,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
                               "type": "text",
                               "id": "tyE3T",
                               "name": "Step Detail",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Dados e ingressos conferidos antes do mint.",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -9064,12 +9055,12 @@
                                   "id": "tu1da",
                                   "name": "Badge Text",
                                   "fill": "$--color-info-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "2",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -9088,24 +9079,24 @@
                               "id": "tc4p5",
                               "name": "Step Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Transação enviada",
                               "fontFamily": "$--font-primary",
                               "fontSize": 14,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
                               "type": "text",
                               "id": "tGDZX",
                               "name": "Step Detail",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Mint iniciado na rede Amoy.",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -9147,12 +9138,12 @@
                                   "id": "tyql0",
                                   "name": "Badge Text",
                                   "fill": "$--color-warning-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "3",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -9171,24 +9162,24 @@
                               "id": "tXvBt",
                               "name": "Step Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Confirmação pendente",
                               "fontFamily": "$--font-primary",
                               "fontSize": 14,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
                               "type": "text",
                               "id": "tbBNH",
                               "name": "Step Detail",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Aguardando o bloco confirmar a publicação.",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -9230,12 +9221,12 @@
                                   "id": "tWJrX",
                                   "name": "Badge Text",
                                   "fill": "$--destructive-foreground",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fit_content(0)",
                                   "content": "4",
                                   "fontFamily": "$--font-primary",
                                   "fontSize": 13,
-                                  "fontWeight": "500",
-                                  "width": "fit_content",
-                                  "textGrowth": "fixed-width"
+                                  "fontWeight": "500"
                                 }
                               ]
                             }
@@ -9254,24 +9245,24 @@
                               "id": "tE5NU",
                               "name": "Step Title",
                               "fill": "$--card-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Falha no mint",
                               "fontFamily": "$--font-primary",
                               "fontSize": 14,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
                               "type": "text",
                               "id": "tstRp",
                               "name": "Step Detail",
                               "fill": "$--muted-foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "A transação não concluiu; use Retry ou Cancelar minting.",
                               "fontFamily": "$--font-primary",
                               "fontSize": 13,
-                              "fontWeight": "normal",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -9544,8 +9535,8 @@
                   "id": "smTabO548n1",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 4,
+                  "y": 4,
                   "name": "Tab Detalhes",
                   "descendants": {
                     "z2WJL": {
@@ -9557,8 +9548,8 @@
                   "id": "smTabO548n2",
                   "type": "ref",
                   "ref": "ahgnz",
-                  "x": 0,
-                  "y": 0,
+                  "x": 94,
+                  "y": 4,
                   "name": "Tab Ingressos",
                   "descendants": {
                     "z2WJL": {
@@ -9570,8 +9561,8 @@
                   "id": "smTabO548n3",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 190,
+                  "y": 4,
                   "name": "Tab Mercado secundário",
                   "descendants": {
                     "z2WJL": {
@@ -9583,8 +9574,8 @@
                   "id": "smTabO548n4",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 357,
+                  "y": 4,
                   "name": "Tab Revisão",
                   "descendants": {
                     "z2WJL": {
@@ -9592,12 +9583,6 @@
                     }
                   }
                 }
-              ],
-              "slot": [
-                "ahgnz",
-                "wf5LJ",
-                "wf5LJ",
-                "wf5LJ"
               ]
             },
             {
@@ -10902,8 +10887,8 @@
       "fill": "$--background",
       "children": [
         {
-          "type": "ref",
           "id": "sm0094",
+          "type": "ref",
           "ref": "k1Tgo",
           "name": "Sidebar",
           "height": "fill_container",
@@ -11023,27 +11008,26 @@
                   "lineHeight": 1.5,
                   "fontFamily": "$--font-primary",
                   "fontSize": 28,
-                  "fontWeight": "600",
-                  "width": "fill_container"
+                  "fontWeight": "600"
                 },
                 {
                   "type": "text",
                   "id": "sm0002",
                   "name": "Page Desc",
                   "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
                   "content": "Defina como seus ingressos poderão ser revendidos depois da venda inicial.",
                   "lineHeight": 1.5,
                   "fontFamily": "$--font-primary",
                   "fontSize": 14,
-                  "fontWeight": "normal",
-                  "width": "fill_container",
-                  "textGrowth": "fixed-width"
+                  "fontWeight": "normal"
                 }
               ]
             },
             {
-              "type": "ref",
               "id": "sm0008",
+              "type": "ref",
               "ref": "zX0Hk",
               "name": "Tabs",
               "width": "fit_content",
@@ -11052,8 +11036,8 @@
                   "id": "mkTab1_sm0087",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 4,
+                  "y": 4,
                   "name": "Tab Detalhes",
                   "descendants": {
                     "z2WJL": {
@@ -11065,8 +11049,8 @@
                   "id": "mkTab2_sm0087",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 94,
+                  "y": 4,
                   "name": "Tab Ingressos",
                   "descendants": {
                     "z2WJL": {
@@ -11078,8 +11062,8 @@
                   "id": "mkTab3_sm0087",
                   "type": "ref",
                   "ref": "ahgnz",
-                  "x": 0,
-                  "y": 0,
+                  "x": 190,
+                  "y": 4,
                   "name": "Tab Mercado secundário",
                   "descendants": {
                     "z2WJL": {
@@ -11091,8 +11075,8 @@
                   "id": "mkTab4_sm0087",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 357,
+                  "y": 4,
                   "name": "Tab Revisão",
                   "descendants": {
                     "z2WJL": {
@@ -11100,13 +11084,6 @@
                     }
                   }
                 }
-              ],
-              "descendants": {},
-              "slot": [
-                "ahgnz",
-                "wf5LJ",
-                "wf5LJ",
-                "wf5LJ"
               ]
             },
             {
@@ -11150,26 +11127,26 @@
                       "id": "sm0018",
                       "name": "Card Title",
                       "fill": "$--foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Regras do mercado secundário",
                       "lineHeight": 1.5,
                       "fontFamily": "$--font-primary",
                       "fontSize": 18,
-                      "fontWeight": "500",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "500"
                     },
                     {
                       "type": "text",
                       "id": "sm0019",
                       "name": "Card Subtitle",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Configure o preço máximo de revenda, a royalty do organizador e o uso obrigatório do marketplace.",
                       "lineHeight": 1.5,
                       "fontFamily": "$--font-primary",
                       "fontSize": 14,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -11180,16 +11157,11 @@
                   "width": "fill_container",
                   "layout": "vertical",
                   "gap": 16,
-                  "padding": [
-                    24,
-                    24,
-                    24,
-                    24
-                  ],
+                  "padding": 24,
                   "children": [
                     {
-                      "type": "ref",
                       "id": "sm0010",
+                      "type": "ref",
                       "ref": "5wVfn",
                       "name": "Input Group",
                       "width": "fill_container",
@@ -11207,17 +11179,17 @@
                       "id": "mk0001",
                       "name": "Ajuda preço máximo",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Limite quanto o comprador pode cobrar em uma resale. Ex.: 120% permite revender por até 20% acima do face value.",
                       "lineHeight": 1.5,
                       "fontFamily": "$--font-primary",
                       "fontSize": 13,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     },
                     {
-                      "type": "ref",
                       "id": "sm0011",
+                      "type": "ref",
                       "ref": "5wVfn",
                       "name": "Input Group",
                       "width": "fill_container",
@@ -11235,13 +11207,13 @@
                       "id": "mk0002",
                       "name": "Ajuda royalty",
                       "fill": "$--muted-foreground",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
                       "content": "Percentual que volta para você em cada resale aprovada.",
                       "lineHeight": 1.5,
                       "fontFamily": "$--font-primary",
                       "fontSize": 13,
-                      "fontWeight": "normal",
-                      "width": "fill_container",
-                      "textGrowth": "fixed-width"
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "frame",
@@ -11262,29 +11234,29 @@
                             {
                               "type": "icon",
                               "id": "sm0012",
+                              "name": "Icon",
                               "width": 18,
                               "height": 18,
                               "icon": "store",
                               "library": "lucide",
-                              "fill": "$--primary",
-                              "name": "Icon"
+                              "fill": "$--primary"
                             },
                             {
                               "type": "text",
                               "id": "sm0013",
                               "name": "Marketplace Text",
                               "fill": "$--foreground",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
                               "content": "Marketplace obrigatório",
                               "lineHeight": 1.5,
                               "fontFamily": "$--font-primary",
                               "fontSize": 16,
-                              "fontWeight": "500",
-                              "width": "fill_container",
-                              "textGrowth": "fixed-width"
+                              "fontWeight": "500"
                             },
                             {
-                              "type": "ref",
                               "id": "sm0014",
+                              "type": "ref",
                               "ref": "Flr2U",
                               "name": "Status Badge",
                               "fill": "$--color-success",
@@ -11302,13 +11274,13 @@
                           "id": "sm0016",
                           "name": "Ajuda marketplace",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "As revendas acontecem apenas pelo marketplace da plataforma. Transferências diretas entre pessoas ficam bloqueadas para evitar cambismo.",
                           "lineHeight": 1.5,
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -11323,25 +11295,25 @@
                         {
                           "type": "icon",
                           "id": "mk0004",
+                          "name": "Icon",
                           "width": 18,
                           "height": 18,
                           "icon": "lock",
                           "library": "lucide",
-                          "fill": "$--primary",
-                          "name": "Icon"
+                          "fill": "$--primary"
                         },
                         {
                           "type": "text",
                           "id": "mk0005",
                           "name": "Texto de imutabilidade",
                           "fill": "$--muted-foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
                           "content": "Depois de publicar o evento, estas regras não poderão ser alteradas.",
                           "lineHeight": 1.5,
                           "fontFamily": "$--font-primary",
                           "fontSize": 14,
-                          "fontWeight": "normal",
-                          "width": "fill_container",
-                          "textGrowth": "fixed-width"
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -11575,8 +11547,8 @@
                   "id": "smTabf3gsn1",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 4,
+                  "y": 4,
                   "name": "Tab Detalhes",
                   "descendants": {
                     "z2WJL": {
@@ -11588,8 +11560,8 @@
                   "id": "smTabf3gsn2",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 94,
+                  "y": 4,
                   "name": "Tab Ingressos",
                   "descendants": {
                     "z2WJL": {
@@ -11601,8 +11573,8 @@
                   "id": "smTabf3gsn3",
                   "type": "ref",
                   "ref": "wf5LJ",
-                  "x": 0,
-                  "y": 0,
+                  "x": 190,
+                  "y": 4,
                   "name": "Tab Mercado secundário",
                   "descendants": {
                     "z2WJL": {
@@ -11614,8 +11586,8 @@
                   "id": "smTabf3gsn4",
                   "type": "ref",
                   "ref": "ahgnz",
-                  "x": 0,
-                  "y": 0,
+                  "x": 357,
+                  "y": 4,
                   "name": "Tab Revisão",
                   "descendants": {
                     "z2WJL": {
@@ -11623,12 +11595,6 @@
                     }
                   }
                 }
-              ],
-              "slot": [
-                "ahgnz",
-                "wf5LJ",
-                "wf5LJ",
-                "wf5LJ"
               ]
             },
             {
@@ -13460,5 +13426,6 @@
         }
       ]
     }
-  }
+  },
+  "fileToken": "e530cbfd-6d38-4c67-aa31-b63d5923ae58"
 }

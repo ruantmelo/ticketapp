@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldError } from "@/components/ui/field";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth, isApiError } from "@/lib/auth";
-import { safeRedirect } from "@/lib/rbac";
+import { defaultRouteFor, safeRedirect } from "@/lib/rbac";
 
 function LoginPage() {
   const { login } = useAuth();
@@ -27,8 +27,8 @@ function LoginPage() {
     setFieldErrors({});
     setSubmitting(true);
     try {
-      await login(email, password);
-      await navigate({ to: safeRedirect(search.redirect, "/events") });
+      const user = await login(email, password);
+      await navigate({ to: safeRedirect(search.redirect, defaultRouteFor(user)) });
     } catch (err) {
       if (isApiError(err)) { if (err.fields) setFieldErrors(err.fields); setError(err.message); } else setError("Erro ao entrar. Tente novamente.");
     } finally { setSubmitting(false); }

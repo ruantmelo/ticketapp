@@ -1,6 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import type { AuthSession } from "@ticket-chain/shared";
 import { sessionQuery } from "@/lib/queries";
-import { safeRedirect } from "@/lib/rbac";
+import { defaultRouteFor, safeRedirect } from "@/lib/rbac";
 
 function AuthLayout() {
   return <Outlet />;
@@ -8,16 +9,17 @@ function AuthLayout() {
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ context, location }) => {
-    let isAuthenticated = false;
+    let session: AuthSession | null = null;
     try {
-      await context.queryClient.ensureQueryData(sessionQuery);
-      isAuthenticated = true;
+      session = await context.queryClient.ensureQueryData(sessionQuery);
     } catch {
-      isAuthenticated = false;
+      session = null;
     }
 
-    if (isAuthenticated) {
-      throw redirect({ to: safeRedirect(new URL(location.href).searchParams.get("redirect"), "/events") });
+    if (session) {
+      throw redirect({
+        to: safeRedirect(new URL(location.href).searchParams.get("redirect"), defaultRouteFor(session.user)),
+      });
     }
   },
   component: AuthLayout,
